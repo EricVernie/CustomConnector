@@ -1,0 +1,189 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Exemple de connecteur personnalisé",
+    "version": "v1"
+  },
+  "host": "webhookforcustomconnector.azurewebsites.net",
+  "basePath": "/",
+  "schemes": [ "https" ],
+  "paths": {
+    "/event/neworder": {
+      "x-ms-notification-content": {
+        "description": "Création d'une nouvelle commande",
+        "schema": {
+          "$ref": "#/definitions/Subscription"
+        }
+      },
+      "post": {
+        "description": "Lorsqu'une nouvelle commande est créée (version d'évaluation)",
+        "summary": "Lorsqu'une nouvelle commande est créée  (version d'évaluation)",
+        "operationId": "Event_neworder",
+        "x-ms-trigger": "single",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Webhook",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Webhook"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Subscription"
+            }
+          }
+        }
+      }
+    },
+    "/event/instore": {
+      "x-ms-notification-content": {
+        "description": "Arrivée de nouveaux produits"
+      },
+      "post": {
+        "description": "Lorsque qu'un nouveau produit arrive dans le magasin (version d'évaluation)",
+        "summary": "Lorsque qu'un nouveau produit arrive dans le magasin (version d'évaluation)",
+        "operationId": "Event_instore",
+        "x-ms-trigger": "single",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Webhook",
+            "schema": {
+              "$ref": "#/definitions/Webhook"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/event/remove/{oid}/{id}": {
+      "delete": {
+        "description": "Supprimer l'abonnement",
+        "summary": "Supprimer l'abonnement",
+        "operationId": "Remove_Event",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "oid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identification de l'abonnement",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/list/neworders": {
+      "get": {
+        "description": "Récupère la liste des nouvelles commandes (version d'évaluation)",
+        "summary": "Récupère la liste des nouvelles commandes (version d'évaluation)",
+        "operationId": "List_neworder",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "TypeEvent": {
+      "format": "int32",
+      "enum": [
+        1,
+        2
+      ],
+      "type": "integer"
+    },
+    "Subscription": {
+      "type": "object",
+      "properties": {
+        "event": {
+          "$ref": "#/definitions/TypeEvent"
+        },
+        "id": {
+          "type": "string"
+        },
+        "callBackUrl": {
+          "type": "string"
+        },
+        "upn": {
+          "type": "string"
+        },
+        "oid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Webhook": {
+      "type": "object",
+      "required": [ "callBackUrl" ],
+      "properties": {
+        "callBackUrl": {
+          "x-ms-notification-url": true,
+          "x-ms-visibility": "internal",
+          "required": [ "callBackUrl" ],
+          "description": "callBackUrl",
+          "title": "callBackUrl",
+          "type": "string"
+        }
+      }
+    },
+    "Order": {
+      "type": "object",
+      "properties": {
+        "customerName": {
+          "type": "string"
+        },
+        "orderNumber": {
+          "type": "string"
+        },
+        "total": {
+          "format": "double",
+          "type": "number"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,88 @@
+LOGICAPP
+Encoding:gzip,deflate
+Accept-Language:en
+Authorization:Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Im5PbzNaRHJPRFhFSzFqS1doWHNsSFJfS1hFZyIsImtpZCI6Im5PbzNaRHJPRFhFSzFqS1doWHNsSFJfS1hFZyJ9.eyJhdWQiOiJhMzVkMDNhNi0xNTM4LTRlNzUtYjQ5Zi01MTM0ZjdjN2MyNDIiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC8zOGFmZGU3OC04YzBiLTQxZjgtYjZhNy0xZjE0NWE4M2FhOWYvIiwiaWF0IjoxNjE1ODI0NTg3LCJuYmYiOjE2MTU4MjQ1ODcsImV4cCI6MTYxNTgyODQ4NywiYWNyIjoiMSIsImFpbyI6IkFYUUFpLzhUQUFBQXlnNTh6bWo0Ujc2QzZLaktoaTVxRExxUFU2UFp6ZHJaclpuTThTc0hPc0NCT1BmUmtkOVVEMmFuM25QUlJCOWE1OGJLMDBRbFVoNzF0MmswTndJeWNxb0I3bWZFS0VtTG96S2M1TTVmU0pUT1ZFa3pBVjAwazFuRFZqVCt5aWZBT3FPMlZ1NStYNHVwTnNKQTBubE5uQT09IiwiYW1yIjpbInB3ZCIsInJzYSIsIm1mYSJdLCJhcHBpZCI6ImEzNWQwM2E2LTE1MzgtNGU3NS1iNDlmLTUxMzRmN2M3YzI0MiIsImFwcGlkYWNyIjoiMSIsImRldmljZWlkIjoiZTg4ZDNjYzctMDMwZS00NWMzLThhNWQtNDg2YzkzM2VjODQ5IiwiZmFtaWx5X25hbWUiOiJWZXJuacOpIiwiZ2l2ZW5fbmFtZSI6IkVyaWMiLCJpcGFkZHIiOiI3Ny4xMzMuMjM2LjI1MCIsIm5hbWUiOiJFcmljIFZlcm5pw6kiLCJvaWQiOiIwYTBlODgwYi01ZTdkLTQxODQtYjI5Mi0wNTdmYWE2NjAyNmQiLCJyaCI6IjAuQVRrQWVONnZPQXVNLUVHMnB4OFVXb09xbjZZRFhhTTRGWFZPdEo5Uk5QZkh3a0k1QU5vLiIsInNjcCI6IlVzZXIuUmVhZCIsInN1YiI6IlNXNmlxYm9yMnhFdkpVUW5NM19ZVXhWYnFDeVdYWXhHelRUQWQ3WjNUXzQiLCJ0aWQiOiIzOGFmZGU3OC04YzBiLTQxZjgtYjZhNy0xZjE0NWE4M2FhOWYiLCJ1bmlxdWVfbmFtZSI6ImVyaWN2QGRlbW96b25leC5jb20iLCJ1cG4iOiJlcmljdkBkZW1vem9uZXguY29tIiwidXRpIjoiVGhGU3k1aElRMHFhY1V3dVRXUTBBQSIsInZlciI6IjEuMCJ9.d2HG9ImbcGDn4nedArn7scMc5q97MQaTsnge3wVOD-jveNpr_4CwB37KrpDVRq5coXJEuojrSPo7Pa9HieZtVg7tTUrftuJusMJEeY5qW_FGAUWlFvD2thFJynqEKQPJXQ_CjS6qLf3YXSSbaA2ux8xtPSA04Jw0v6bmLQ9TAnAoMSxZ5HLCVg0uggPU9-D775FMvhRn9DITiCJvpTpBYaQGa22HMKJcQVzNDtMR6KxuXPx4LpVMFUj2f9ftX9073vrB-DZZjjLYOf8iiLGrKHneIYCRULGO6Oc8TwKKO5hWOfYSjag3DLTpa4aT3V7agXZti-RNutkYIs3O_ujX6Q
+Connection:Keep-Alive
+Content-Length:591
+Content-Type:application/json; charset=utf-8
+Host:webhookforcustomconnector.azurewebsites.net
+Max-Forwards:10
+User-Agent:azure-logic-apps/1.0 (workflow f2b612c941b440299819de90cd2484bf; version 08585857803267635177)
+x-ms-trigger-type:ApiConnectionWebhook
+x-ms-workflow-id:f2b612c941b440299819de90cd2484bf
+x-ms-workflow-version:08585857803267635177
+x-ms-workflow-name:FDDLogicApp
+x-ms-workflow-system-id:/locations/francecentral/scaleunits/prod-30/workflows/f2b612c941b440299819de90cd2484bf
+x-ms-workflow-run-id:08585857803263613019293383933CU21
+x-ms-workflow-operation-name:Lorsqu%27une_nouvelle_commande_est_cr%c3%a9%c3%a9e__(version_d%27%c3%a9valuation)
+x-ms-execution-location:francecentral
+x-ms-workflow-subscription-id:9a96981c-4056-48b7-9301-7c2757548bcf
+x-ms-workflow-resourcegroup-name:training-logicapp-rg
+x-ms-tracking-id:c7cb18bc-9d30-4457-a4f7-bf262c3c331a
+x-ms-correlation-id:c7cb18bc-9d30-4457-a4f7-bf262c3c331a
+x-ms-client-request-id:c7cb18bc-9d30-4457-a4f7-bf262c3c331a
+x-ms-activity-vector:IN.0J.IN.1T
+X-MS-APIM-Referrer:https://logic-apis-francecentral.azure-apim.net/apim/6031660d1f624f11a347741ca29cf0ae/085ef218c2e74c73a7d5b9ae9c702793/event/neworder
+x-ms-gateway-object-id:
+X-MS-APIM-Referrer-Prefix:https://logic-apis-francecentral.azure-apim.net/apim/6031660d1f624f11a347741ca29cf0ae/085ef218c2e74c73a7d5b9ae9c702793
+X-MS-APIM-Callback:https://logic-apis-francecentral.consent.azure-apim.net
+X-Forwarded-For:52.143.164.80, 40.89.186.239:1728
+X-WAWS-Unencoded-URL:/event/neworder
+CLIENT-IP:40.89.186.239:1728
+X-ARR-LOG-ID:a2504d88-a98e-49a4-bfcd-fc69f5bec677
+DISGUISED-HOST:webhookforcustomconnector.azurewebsites.net
+X-SITE-DEPLOYMENT-ID:WebHookForCustomConnector
+WAS-DEFAULT-HOSTNAME:webhookforcustomconnector.azurewebsites.net
+X-Original-URL:/event/neworder
+X-ARR-SSL:2048|256|C=US, O=Microsoft Corporation, CN=Microsoft RSA TLS CA 01|CN=*.azurewebsites.net
+X-Forwarded-Proto:https
+X-AppService-Proto:https
+X-Forwarded-TlsVersion:1.2
+
+POWERAUTOMATE
+Accept-Language:fr-FR
+Authorization:Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Im5PbzNaRHJPRFhFSzFqS1doWHNsSFJfS1hFZyIsImtpZCI6Im5PbzNaRHJPRFhFSzFqS1doWHNsSFJfS1hFZyJ9.eyJhdWQiOiJhMzVkMDNhNi0xNTM4LTRlNzUtYjQ5Zi01MTM0ZjdjN2MyNDIiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC8zOGFmZGU3OC04YzBiLTQxZjgtYjZhNy0xZjE0NWE4M2FhOWYvIiwiaWF0IjoxNjE1ODI1MzE3LCJuYmYiOjE2MTU4MjUzMTcsImV4cCI6MTYxNTgyOTIxNywiYWNyIjoiMSIsImFpbyI6IkFVUUF1LzhUQUFBQUNSOTIzN3lmb2V4UEFkUmI4MHd1VjNwSk94a0svOWxud2R4cW1sZUc4UFFYQStLRWlTRTJQdEtJc09OZWxVcllONWdEbmYxT0NXanhTeFZBMjZ5Z3dRPT0iLCJhbXIiOlsicHdkIiwibWZhIl0sImFwcGlkIjoiYTM1ZDAzYTYtMTUzOC00ZTc1LWI0OWYtNTEzNGY3YzdjMjQyIiwiYXBwaWRhY3IiOiIxIiwiZGV2aWNlaWQiOiJlODhkM2NjNy0wMzBlLTQ1YzMtOGE1ZC00ODZjOTMzZWM4NDkiLCJmYW1pbHlfbmFtZSI6IlZlcm5pw6kiLCJnaXZlbl9uYW1lIjoiRXJpYyIsImlwYWRkciI6Ijc3LjEzMy4yMzYuMjUwIiwibmFtZSI6IkVyaWMgVmVybmnDqSIsIm9pZCI6IjBhMGU4ODBiLTVlN2QtNDE4NC1iMjkyLTA1N2ZhYTY2MDI2ZCIsInJoIjoiMC5BVGtBZU42dk9BdU0tRUcycHg4VVdvT3FuNllEWGFNNEZYVk90SjlSTlBmSHdrSTVBTm8uIiwic2NwIjoiVXNlci5SZWFkIiwic3ViIjoiU1c2aXFib3IyeEV2SlVRbk0zX1lVeFZicUN5V1hZeEd6VFRBZDdaM1RfNCIsInRpZCI6IjM4YWZkZTc4LThjMGItNDFmOC1iNmE3LTFmMTQ1YTgzYWE5ZiIsInVuaXF1ZV9uYW1lIjoiZXJpY3ZAZGVtb3pvbmV4LmNvbSIsInVwbiI6ImVyaWN2QGRlbW96b25leC5jb20iLCJ1dGkiOiI5cXVfeGc1d05VMmZDa3pkcjhRUkFBIiwidmVyIjoiMS4wIn0.XtiN-JI7jehTkA3Xm3kd3cYZBNL5fqOaNerbmPFwG68iszkrq8pfbj-CChzZUkwWYvxKSv5mi2A-4sKC0Bu2iTXy_aq6eY106mM8eV1yFNaDqQGvr1IWZe7nh2UjFVJb6mjMFojtvWPejekW4kQzWJuWX7QztvQ0IwChNeq74tba0FleVJ5kTYVI9kSW0dm9xls1udUrmhDwJ9p4vNHsVw0rbn_K-REtzaDsM_gPtdRXp9gYPwz2aVd-smmH2BJEk1_ju2LCdR8xkxEbJNKyap9EPQdaUjiR-tlfGRBtSKNQsRPFIjnW8xJ6ZIkhlcwhPg_UgGRL4Z8M1ZW_2vEA7Q
+Connection:Keep-Alive
+Content-Length:588
+Content-Type:application/json
+Host:webhookforcustomconnector.azurewebsites.net
+Max-Forwards:10
+User-Agent:azure-logic-apps/1.0 (workflow ac373f86de9a41a09f5679aa9df79ff3; version 08585857802263720938) microsoft-flow/1.0
+x-ms-trigger-type:OpenApiConnectionWebhook
+x-ms-workflow-id:ac373f86de9a41a09f5679aa9df79ff3
+x-ms-workflow-version:08585857802263720938
+x-ms-workflow-name:138f0f1e-b6b5-424b-9803-fc2fb0724647
+x-ms-workflow-system-id:/locations/westeurope/scaleunits/prod-64/workflows/ac373f86de9a41a09f5679aa9df79ff3
+x-ms-workflow-run-id:08585857802260192632826972044CU182
+x-ms-workflow-operation-name:Lorsqu%27une_nouvelle_commande_est_cr%c3%a9%c3%a9e__(version_d%27%c3%a9valuation)
+x-ms-execution-location:westeurope
+x-ms-workflow-subscription-id:5072fcc3-8341-442e-9b98-4b441017c969
+x-ms-workflow-resourcegroup-name:38AFDE788C0B41F8B6A71F145A83AA9F-0A0E880B5E7D4184B292057FAA66026D
+x-ms-tracking-id:ebb7b9fa-9e13-4745-93ff-a75608744818
+x-ms-correlation-id:ebb7b9fa-9e13-4745-93ff-a75608744818
+x-ms-client-request-id:ebb7b9fa-9e13-4745-93ff-a75608744818
+x-ms-activity-vector:IN.2R.IN.0B.IN.1Z
+X-MS-APIM-Referrer:https://europe-002.azure-apim.net/apim/fddconnecteur-5fe2b721553cb2c29d-5fdc24e93f9fb52ee4/91129639581f49c2827c71ba21af33e9/event/neworder
+x-ms-gateway-object-id:
+x-ms-environment-id:Default-38afde78-8c0b-41f8-b6a7-1f145a83aa9f
+X-MS-APIM-Referrer-Prefix:https://europe-002.azure-apim.net/apim/fddconnecteur-5fe2b721553cb2c29d-5fdc24e93f9fb52ee4/91129639581f49c2827c71ba21af33e9
+X-MS-APIM-Callback:https://europe-002.consent.azure-apim.net
+X-Forwarded-For:13.95.147.65, 137.117.161.181:44096
+X-WAWS-Unencoded-URL:/event/neworder
+CLIENT-IP:137.117.161.181:44096
+X-ARR-LOG-ID:eab74994-d5c2-4eeb-9828-4704d8ccdba7
+DISGUISED-HOST:webhookforcustomconnector.azurewebsites.net
+X-SITE-DEPLOYMENT-ID:WebHookForCustomConnector
+WAS-DEFAULT-HOSTNAME:webhookforcustomconnector.azurewebsites.net
+X-Original-URL:/event/neworder
+X-ARR-SSL:2048|256|C=US, O=Microsoft Corporation, CN=Microsoft RSA TLS CA 01|CN=*.azurewebsites.net
+X-Forwarded-Proto:https
+X-AppService-Proto:https
+X-Forwarded-TlsVersion:1.2
+
+2021-03-15 16:44:19.670 +00:00 [Information] WebHookForCustomConnector.Controllers.StoreEventTrigger: Location: https://webhookforcustomconnector.azurewebsites.net/event/remove/097e1c34-349e-4e28-a29f-beca935d619a
+2021-03-15 16:44:19.671 +00:00 [Information] Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker: Executed action method WebHookForCustomConnector.Controllers.StoreEventTrigger.NewEcommerceOrder (WebhookForCustomConnector), returned result Microsoft.AspNetCore.Mvc.CreatedResult in 1.0362ms.
+2021-03-15 16:44:19.671 +00:00 [Information] Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor: Executing ObjectResult, writing value of type 'WebHookForCustomConnector.DataModel.Subscription'.
+2021-03-15 16:44:19.671 +00:00 [Information] Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker: Executed action WebHookForCustomConnector.Controllers.StoreEventTrigger.NewEcommerceOrder (WebhookForCustomConnector) in 9.6245ms
+2021-03-15 16:44:19.671 +00:00 [Information] Microsoft.AspNetCore.Routing.EndpointMiddleware: Executed endpoint 'WebHookForCustomConnector.Controllers.StoreEventTrigger.NewEcommerceOrder (WebhookForCustomConnector)'
+2021-03-15 16:44:19.671 +00:00 [Information] Microsoft.AspNetCore.Hosting.Diagnostics: Request finished in 22.7562ms 201 application/json; charset=utf-8
