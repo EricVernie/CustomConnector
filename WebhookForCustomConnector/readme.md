@@ -141,7 +141,7 @@ public IActionResult NewInstoreProduct([FromBody] Webhook body)
 }
 ```
 
-Cette méthode sera appelée par Logic App/Power Automate avec l'url de rappel contenu dans la propriété body.CallBackUrl.
+Cette méthode sera appelée par Logic App/Power Automate avec l'url de rappel contenu dans la propriété **body.CallBackUrl**.
 Nous reviendrons plus en détails plus tard sur la méthode **AddsSubscription** qui sauvegarde entre autre l'url de rappel, mais notez que cette méthode retourne dans l'entête **Location** l'url qu'appelera Logic App/Power Automate, lorsque le connecteur personnalisé ou le workflow l'utilisant sera supprimé.
 Le format de cette url "https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}/" est arbitraire, elle dépendra uniquement de votre logique.
 Ici j'ai décidé de la constituer du champ **Oid** qui représente un numéro d'identification de l'utilisateur authentifié et du champ **Id** numéro de la souscription renvoyé par Logic App/Power Automate que nous verrons un peu plus tard lorsque j'aborderai la sécurité du connecteur.
@@ -206,7 +206,7 @@ En effet il est important que l'utilisateur puisse s'identifier avant de pouvoir
 
 Voici les différentes étapes à suivre :
 
-1. A l'aide du portal https://aad.portal.azure.com/, selectionnez "Azure Active Directory" | Inscription d'applications
+1. A l'aide du portail https://aad.portal.azure.com/, selectionnez "Azure Active Directory" | Inscription d'applications
 
 2. "+ Nouvelle inscription" | Donnez un Nom | Cochez "Comptes dans un annuaire d'organisation (tout annuaire Azure AD - Multilocataire)
 
@@ -222,38 +222,34 @@ Voici les différentes étapes à suivre :
 
 8. Copiez l'étendue qui doit être de la forme api://[ID de l'application]/impersonate
 
-A ce stade vous devez avoir copié trois paramètres
+    A ce stade vous devez avoir copié trois paramètres
 
-- ID d'application (client)
+    - ID d'application (client)
 
-- Le secret de l'application
+    - Le secret de l'application
 
-- l'étendue de l'application
+    - l'étendue de l'application
 
-Il nous reste encore un élèment essentiel que nous n'avons pas encore renseigné, mais qui ne peut être que fourni par Logic App/Power Automate lorsqu'on renseigne les différents champs dans l'onglet sécurité
+9. Il nous reste encore un élèment essentiel que nous n'avons pas encore renseigné, mais qui ne peut être que fourni par Logic App/Power Automate lorsqu'on renseigne les différents champs dans l'onglet sécurité
 c'est l'url de redirection. Comme illustré sur la figure suivante :
 
-![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Securite2.png)
+    ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Securite2.png)
 
-Dans les champs :
+    | Champs       | Valeur         |
+    | :------------- | :----------: |
+    |Type Authentification| Oauth 2.0 |
+    |  Fournisseur d'identité | Azure Active Directory  |
+    |  Client id  | copiez ID d'application (client)|
+    |  Client Secret   | copiez le secret de l'application|
+    |  Etendue  | copiez l'étendue de l'application|
 
-Choisir Oauth2
+    Une fois le connecteur enregistré, copiez **URL de redirection**, car nous allons finir l'enregistrement de notre application Azure Active Directory.
 
-Fouornisseur d'identité : Azure Active Directory
+    >Note : Logic App retourne une URL du style : https://logic-apis-francecentral.consent.azure-apim.net/redirect, Power Automate retourne une URL du style : https://global.consent.azure-apim.net/redirect
 
-Client id : copiez ID d'application (client)
+10. Retournez sur le portail Azure Active Directory https://aad.portal.azure.com, selectionnez l'application que vous venez d'inscrire
 
-Client Secret : copiez le secret de l'application
-
-Resource Url : copiez ID d'application (client)
-
-Etendue : copiez l'étendue de l'application.
-
-une fois le connecteur enregistré, copiez URL de redirection
-
->Note : Logic App retourne une URL du style : https://logic-apis-francecentral.consent.azure-apim.net/redirect, Power Automate retourne une URL du style : https://global.consent.azure-apim.net/redirect
-
-
+11. 
 
 
 
