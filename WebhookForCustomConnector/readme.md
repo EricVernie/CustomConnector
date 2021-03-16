@@ -230,9 +230,27 @@ A ce stade vous devez avoir copié trois paramètres
 
 - l'étendue de l'application
 
-Il nous reste encore un élèment essentiel que nous n'avons pas encore renseigné, mais qui ne peut être que fourni par Logic App/Power Automate lorsqu'on renseigne les différents 
-
+Il nous reste encore un élèment essentiel que nous n'avons pas encore renseigné, mais qui ne peut être que fourni par Logic App/Power Automate lorsqu'on renseigne les différents champs dans l'onglet sécurité
+c'est l'url de redirection. Comme illustré sur la figure suivante :
 ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Securite.png)
+
+Dans les champs :
+
+Client id : copiez ID d'application (client)
+
+Client Secret : copiez le secret de l'application
+
+Resource Url : copiez ID d'application (client)
+
+Etendue : copiez l'étendue de l'application.
+
+une fois le connecteur enregistré, copiez URL de redirection
+
+>Note : Logic App retourne une URL du style : https://logic-apis-francecentral.consent.azure-apim.net/redirect, Power Automate retourne une URL du style : https://global.consent.azure-apim.net/redirect
+
+
+
+
 
 
 
