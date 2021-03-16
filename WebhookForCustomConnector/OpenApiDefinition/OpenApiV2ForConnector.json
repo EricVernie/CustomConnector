@@ -7,6 +7,8 @@
   "host": "webhookforcustomconnector.azurewebsites.net",
   "basePath": "/",
   "schemes": [ "https" ],
+  "consumes": [ "application/json" ],
+  "produces": [ "application/json" ],
   "securityDefinitions": {
     "oauth2_auth": {
       "type": "oauth2",
@@ -18,24 +20,13 @@
   "paths": {
     "/event/neworder": {
       "x-ms-notification-content": {
-        "description": "Création d'une nouvelle commande",
-        "schema": {
-          "$ref": "#/definitions/Subscription"
-        }
+        "description": "Création d'une nouvelle commande"
       },
       "post": {
         "description": "Lorsqu'une nouvelle commande est créée (version d'évaluation)",
         "summary": "Lorsqu'une nouvelle commande est créée  (version d'évaluation)",
-        "operationId": "Event_neworder",
+        "operationId": "NewEcommerceOrder",
         "x-ms-trigger": "single",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
         "parameters": [
           {
             "in": "body",
@@ -63,11 +54,8 @@
       "post": {
         "description": "Lorsque qu'un nouveau produit arrive dans le magasin (version d'évaluation)",
         "summary": "Lorsque qu'un nouveau produit arrive dans le magasin (version d'évaluation)",
-        "operationId": "Event_instore",
+        "operationId": "NewInstoreProduct",
         "x-ms-trigger": "single",
-        "consumes": [
-          "application/json"
-        ],
         "parameters": [
           {
             "in": "body",
@@ -88,7 +76,7 @@
       "delete": {
         "description": "Supprimer l'abonnement",
         "summary": "Supprimer l'abonnement",
-        "operationId": "Remove_Event",
+        "operationId": "RemoveSubscription",
         "x-ms-visibility": "internal",
         "parameters": [
           {
@@ -116,12 +104,7 @@
       "get": {
         "description": "Récupère la liste des nouvelles commandes (version d'évaluation)",
         "summary": "Récupère la liste des nouvelles commandes (version d'évaluation)",
-        "operationId": "List_neworder",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
+        "operationId": "GetListNewOrders",
         "responses": {
           "200": {
             "description": "Success",

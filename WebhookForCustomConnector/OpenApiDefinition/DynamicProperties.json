@@ -7,36 +7,23 @@
   "host": "webhookforcustomconnector.azurewebsites.net",
   "basePath": "/",
   "schemes": [ "https" ],
+  "consumes": [ "application/json" ],
+  "produces": [ "application/json" ],
   "securityDefinitions": {
     "oauth2_auth": {
       "type": "oauth2",
       "flow": "accessCode",
       "authorizationUrl": "https://login.windows.net/common/oauth2/authorize",
-      "tokenUrl": "https://login.windows.net/common/oauth2/authorize",
-      "scopes": { "api://a35d03a6-1538-4e75-b49f-5134f7c7c242/impersonate": "api://a35d03a6-1538-4e75-b49f-5134f7c7c242/impersonate" }
+      "tokenUrl": "https://login.windows.net/common/oauth2/authorize"
     }
   },
   "paths": {
-    "/event/neworder": {
-      "x-ms-notification-content": {
-        "description": "Création d'une nouvelle commande",
-        "schema": {
-          "$ref": "#/definitions/Subscription"
-        }
-      },
+    "/event/neworder": {    
       "post": {
         "description": "Lorsqu'une nouvelle commande est créée (version d'évaluation)",
         "summary": "Lorsqu'une nouvelle commande est créée  (version d'évaluation)",
-        "operationId": "Event_neworder",
+        "operationId": "NewEcommerceOrder",
         "x-ms-trigger": "single",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
         "parameters": [
           {
             "in": "body",
@@ -57,18 +44,12 @@
         }
       }
     },
-    "/event/instore": {
-      "x-ms-notification-content": {
-        "description": "Arrivée de nouveaux produits"
-      },
+    "/event/instore": {      
       "post": {
         "description": "Lorsque qu'un nouveau produit arrive dans le magasin (version d'évaluation)",
         "summary": "Lorsque qu'un nouveau produit arrive dans le magasin (version d'évaluation)",
-        "operationId": "Event_instore",
+        "operationId": "NewInstoreProduct",
         "x-ms-trigger": "single",
-        "consumes": [
-          "application/json"
-        ],
         "parameters": [
           {
             "in": "body",
@@ -89,7 +70,7 @@
       "delete": {
         "description": "Supprimer l'abonnement",
         "summary": "Supprimer l'abonnement",
-        "operationId": "Remove_Event",
+        "operationId": "RemoveSubscription",
         "x-ms-visibility": "internal",
         "parameters": [
           {
@@ -117,12 +98,7 @@
       "get": {
         "description": "Récupère la liste des nouvelles commandes (version d'évaluation)",
         "summary": "Récupère la liste des nouvelles commandes (version d'évaluation)",
-        "operationId": "List_neworder",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
+        "operationId": "GetListNewOrders",
         "responses": {
           "200": {
             "description": "Success",

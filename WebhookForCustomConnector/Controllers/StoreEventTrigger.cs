@@ -56,19 +56,16 @@ namespace WebHookForCustomConnector.Controllers
         [HttpPost, Route("/event/neworder")]
         public IActionResult NewEcommerceOrder([FromBody] Webhook body)
         {
-
             _logger.LogInformation("Abonnement à l'évènement 'Lorsqu'une nouvelle commande est créée'");            
-   
             Subscription subscription = AddSubscription(body,TypeEvent.NewOrder, this.Request.Headers);
             string location = $"https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}";
             _logger.LogInformation($"Location: {location}");
-
-            return new CreatedResult(location, subscription);
+            return new CreatedResult(location, null);
         }
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost, Route("/event/instore")]
-        public IActionResult Instore([FromBody] Webhook body)
+        public IActionResult NewInstoreProduct([FromBody] Webhook body)
         {
             _logger.LogInformation("Abonnement à l'évènement 'Arrivée de nouveaux produits' ");
             Subscription subscription = AddSubscription(body, TypeEvent.InStore, this.Request.Headers);
@@ -88,9 +85,9 @@ namespace WebHookForCustomConnector.Controllers
         /// <param name="callbackUrl"></param>
         /// <returns></returns>
         [HttpDelete, Route("/event/remove/{oid}/{id}")]
-        public IActionResult remove(string oid,string id)
+        public IActionResult RemoveSubscription(string oid,string id)
         {
-            _logger.LogInformation($"Suppression abonnement : {id}");
+            _logger.LogInformation($"Suppression de l'abonnement : {id}");
             
             var itemToRemove = _subscriptions.Single(r => r.Id == id && r.Oid == oid);
             _subscriptions.Remove(itemToRemove);
