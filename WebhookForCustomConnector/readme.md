@@ -232,7 +232,8 @@ A ce stade vous devez avoir copié trois paramètres
 
 Il nous reste encore un élèment essentiel que nous n'avons pas encore renseigné, mais qui ne peut être que fourni par Logic App/Power Automate lorsqu'on renseigne les différents champs dans l'onglet sécurité
 c'est l'url de redirection. Comme illustré sur la figure suivante :
-![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Securite.png)
+
+![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Securite2.png)
 
 Dans les champs :
 
