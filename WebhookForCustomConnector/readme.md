@@ -1,7 +1,8 @@
 
-# Développer un connecteur personnalisé pour Power Automate et Azure Logic App à base de déclencheurs (Triggers).
+# Développer un connecteur personnalisé pour Power Automate et Azure Logic App à base de déclencheurs (Triggers)
 
-Je ne reviendrais pas sur ce qu’est un connecteur, je vous laisse le soin d’aller voir la documentation [Connecteurs](https://docs.microsoft.com/fr-fr/connectors/connectors)
+Je ne reviendrais pas sur la manière de créer un connecteur personnalisé, je vous laisse le soin d’aller voir la [documentation en ligne](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/define-openapi-definition)
+
 
 Pour résumé, un connecteur peut-être de type :
 
@@ -61,7 +62,7 @@ Dans les lignes qui suivent nous allons donc voir comment créer, le code du Web
 Pour définir un déclencheur, il faut rajouter la propriété **"x-ms-trigger": "single"** qui va indiquer à Logic App et Power Automate d'afficher l'opération en tant que déclencheur dans l'éditeur de connecteur personnalisé, comme illustré sur la figure suivante.
 Ne pas la mettre défini l'opération comme étant une Action.
 
-![DEFINITIION](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Definition.png)
+![DEFINITION](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Definition.png)
 
 ```json
 "/event/instore": {
@@ -179,10 +180,11 @@ La définition OpenAPI doit donc inclure impérative une définition pour la sup
 
 ```
 
-Ici nous définissons deux paramètres **oid** et **id** requis qui seront placés dans l'url elle même **"in":"path"**
+Ici nous définissons deux paramètres **oid** et **id** requis qui seront placés dans l'url elle même **"in":"path"**.
+
 Vous noterez que c'est une opération de type Action, il est donc impératif qu'elle ne soit pas visible pour les utilisateurs **"x-ms-visibility":"internal"**
 
-La représentation en C# est la suivante :
+La représentation C# est la suivante :
 
 ```CSharp
  [HttpDelete, Route("/event/remove/{oid}/{id}")]
@@ -196,5 +198,56 @@ La représentation en C# est la suivante :
 
 >Note : C'est une représentation trés naive, car les abonnements sont placés en mémoire dans une simple liste. Il faudra sans doute penser à un système plus robuste et autonome. Mais cela suffit ici pour nos besoins de démonstrations.
 
-Si vous souhaitez voir tout de suite ce que cela donne avec l'éditeur de connecteur personnalisé voici le [Lien sur le fichier de définition](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/OpenApiDefinition/OpenApiV2ForConnector.json) de ce tutoriel.
+Si vous souhaitez voir tout de suite ce que cela donne avec l'éditeur de connecteur personnalisé, voici le [Lien sur le fichier de définition](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/OpenApiDefinition/OpenApiV2ForConnector.json) de ce tutoriel, puis en suivant les instructions [ici](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/define-openapi-definition)
 
+Reste maintenant à aborder la partie sécurité de notre connecteur.
+
+En effet il est important que l'utilisateur puisse s'identifier avant de pouvoir l'utiliser. Nous utiliserons dans notre cas Azure Active Directory
+
+Voici les différentes étapes à suivre :
+
+1. A l'aide du portal https://aad.portal.azure.com/, selectionnez "Azure Active Directory" | Inscription d'applications
+
+2. "+ Nouvelle inscription" | Donnez un Nom | Cochez "Comptes dans un annuaire d'organisation (tout annuaire Azure AD - Multilocataire)
+
+3. Bouton S'inscrire
+
+4. Une fois l'application inscrite, selectionnez "Vue d'ensemble"  et copiez le GUID "ID d'application (client)"
+
+5. Ensuite selectionnez "Certificats & Secrets" | "+ Nouveau secret client" (copiez le secret pour une utilisation future)
+
+6. Puis selectionnez "API autorisées" | "+ Ajouter une autorisation" | "Microsoft Graph" | "Autorisations déléguées" | cochez "openid et profile"
+
+7. Selectionnez "Exposer une API" | "+ Ajouter une étendue" | Nom de l'étendue: impersonate | Qui peut accepter :" Administrateurs et Utilisateurs" | puis remplissez les autres champs obligatoires
+
+8. Copiez l'étendue qui doit être de la forme api://[ID de l'application]/impersonate
+
+A ce stade vous devez avoir copié trois paramètres
+
+- ID d'application (client)
+
+- Le secret de l'application
+
+- l'étendue de l'application
+
+Il nous reste encore un élèment essentiel que nous n'avons pas encore renseigné, mais qui ne peut être que fourni par Logic App/Power Automate lorsqu'on renseigne les différents 
+
+![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Securite.png)
+
+
+
+
+Il est possible dans le fichier de définition de préparer le terrain, en y ajoutant la propriété **securityDefinitions** comme indiqué dans l'extrait suivant : 
+
+```json
+"securityDefinitions": {
+    "oauth2_auth": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://login.windows.net/common/oauth2/authorize",
+      "tokenUrl": "https://login.windows.net/common/oauth2/authorize"
+    }
+  }
+```
+
+Ensuite il faut que le code C# puisse gérér
