@@ -230,8 +230,7 @@ Voici les différentes étapes à suivre :
 
     - l'étendue de l'application
 
-9. Il nous reste encore un élèment essentiel que nous n'avons pas encore renseigné, mais qui ne peut être que fourni par Logic App/Power Automate lorsqu'on renseigne les différents champs dans l'onglet sécurité
-c'est l'url de redirection. Comme illustré sur la figure suivante :
+9. Il nous reste encore un élèment essentiel que nous n'avons pas encore renseigné, mais qui ne peut être que fourni que par l'éditeur de connecteur personnalisé Logic App/Power Automate, lorsqu'on renseigne les différents champs dans l'onglet sécurité c'est **l'url de redirection**. Comme illustré sur la figure suivante :
 
     ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Securite2.png)
 
@@ -249,7 +248,10 @@ c'est l'url de redirection. Comme illustré sur la figure suivante :
 
 10. Retournez sur le portail Azure Active Directory https://aad.portal.azure.com, selectionnez l'application que vous venez d'inscrire
 
-11. 
+11. Selectionnez "Authentification" | "+ Ajoutez une plateforme" | Application Web | Web | Copiez l'uri de redirection
+
+    ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/URI.png)
+
 
 
 
