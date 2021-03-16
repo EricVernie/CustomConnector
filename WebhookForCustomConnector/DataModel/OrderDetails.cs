@@ -17,6 +17,6 @@ namespace WebHookForCustomConnector.DataModel
     {
         public string CustomerName { get; set; }
         public string OrderNumber { get; set; }
-        public decimal Total { get; set; }
+        public double Total { get; set; }
     }
 }

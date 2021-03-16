@@ -16,6 +16,7 @@ using WebHookForCustomConnector.DataModel;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.Extensions.Configuration;
 
 namespace WebHookForCustomConnector.Controllers
 {
@@ -25,7 +26,7 @@ namespace WebHookForCustomConnector.Controllers
     public class StoreEventTrigger : ControllerBase
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static List<Subscription> _subscriptions = new List<Subscription>();
 
@@ -35,10 +36,12 @@ namespace WebHookForCustomConnector.Controllers
         private readonly IHttpClientFactory _clientFactory;
         private readonly TelemetryClient _telemetry;
         private readonly ILogger<StoreEventTrigger> _logger;
-        public StoreEventTrigger(IHttpClientFactory clientFactory,TelemetryClient telemetry, ILogger<StoreEventTrigger> logger)
+        private readonly IConfiguration _configuration;
+        public StoreEventTrigger(IHttpClientFactory clientFactory,TelemetryClient telemetry, ILogger<StoreEventTrigger> logger, IConfiguration configuration)
         {
             _clientFactory = clientFactory;
             _logger = logger;
+            _configuration = configuration;
         }
 
       
@@ -55,13 +58,7 @@ namespace WebHookForCustomConnector.Controllers
         {
 
             _logger.LogInformation("Abonnement à l'évènement 'Lorsqu'une nouvelle commande est créée'");            
-            //StringBuilder sb = new StringBuilder();
-            //foreach (var h in headers)
-            //{
-            //    sb.AppendLine($"{h.Key}:{h.Value}");
-            //}
-
-            //_logger.LogInformation(sb.ToString());
+   
             Subscription subscription = AddSubscription(body,TypeEvent.NewOrder, this.Request.Headers);
             string location = $"https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}";
             _logger.LogInformation($"Location: {location}");
@@ -112,37 +109,45 @@ namespace WebHookForCustomConnector.Controllers
 
 
         }
+     
         private Subscription AddSubscription(Webhook body,TypeEvent typeEvent, IHeaderDictionary headers)
         {
 
-            var BearerToken = headers.Where(x => x.Key == "Authorization")
-                               .Select(x => x)
-                               .First();
-
-
-            string Token = BearerToken.Value;
-            // Enlève le mot Bearer + l'espace entre le mot et le jeton
-            Token = Token.Remove(0, 7);
-
-            var Handler = new JwtSecurityTokenHandler();
-            var AccessToken = Handler.ReadJwtToken(Token);
+            Subscription subscription = null;
             
+            // Récupère le numéro d'abonnement du workflow afin de le stocker pour le retrouver
+            // pour suppression.
 
             var SubId = headers.Where(x => x.Key == "x-ms-workflow-subscription-id")
                                .Select(x => x)
                                .First();
-                             
-            
 
-            Subscription subscription = new Subscription
+
+            // L'entête doit forcement contenir un jeton d'accès sous la forme
+            // Authorization:Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi.....
+            var BearerToken = headers.Where(x => x.Key == "Authorization")
+                           .Select(x => x)
+                           .First();                       
+            string Token = BearerToken.Value;
+
+            // Supprime le mot Bearer + l'espace entre le mot et le jeton
+            Token = Token.Remove(0, 7);
+
+            var Handler = new JwtSecurityTokenHandler();
+            var AccessToken = Handler.ReadJwtToken(Token);
+
+            subscription = new Subscription
             {
                 Event = typeEvent,
                 CallBackUrl = body.CallBackUrl,
                 Id = SubId.Value,
-                Name=GetClaimValue(AccessToken,"name"),
-                Upn= GetClaimValue(AccessToken, "upn"),
-                Oid=GetClaimValue(AccessToken,"oid")
+                Name = GetClaimValue(AccessToken, "name"),
+                Upn = GetClaimValue(AccessToken, "upn"),
+                Oid = GetClaimValue(AccessToken, "oid")
             };
+            
+            // Le stockage des abonnements se fait en mémoire
+            // Bien évidement il faudra utiliser un système plus robuste.
             _subscriptions.Add(subscription);
             return subscription;
         }

@@ -12,7 +12,8 @@
       "type": "oauth2",
       "flow": "accessCode",
       "authorizationUrl": "https://login.windows.net/common/oauth2/authorize",
-      "tokenUrl": "https://login.windows.net/common/oauth2/authorize"
+      "tokenUrl": "https://login.windows.net/common/oauth2/authorize",
+      "scopes": { "api://a35d03a6-1538-4e75-b49f-5134f7c7c242/impersonate": "api://a35d03a6-1538-4e75-b49f-5134f7c7c242/impersonate" }
     }
   },
   "paths": {

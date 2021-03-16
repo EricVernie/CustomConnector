@@ -9,5 +9,6 @@ namespace WebHookForCustomConnector.DataModel
     {
         public string StoreName { get; set; }
         public string ProductName { get; set; }
+        public int Quantity { get; set; }
     }
 }
