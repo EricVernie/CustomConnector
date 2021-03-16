@@ -49,9 +49,10 @@ En créant un connecteur personnalisé, vous allez ajouter de la souplesse à vo
 
 4. Lorsqu'un évènement se passe, par exemple l'ajout d'une nouvelle commande, votre système initie le workflow à l'aide de l'url de rappel
 
-L'intégration d'un connecteur personnalisé avec Logic App et Power Automate se fait par l'intermédiaire d'un fichier au format json, qui suit la spécification OpenAPI plus connue sous le nom de spécification [Swagger](https://swagger.io) **version 2.0**.
+L'intégration d'un connecteur personnalisé avec Logic App et Power Automate se fait par l'intermédiaire d'un fichier au format json, qui suit la spécification OpenAPI plus connue sous le nom de spécification [Swagger](https://swagger.io) **version 2.0**, standard qui permet de définir les interfaces RestFull.
+
 >**Note:** Logic App et Power Automate, ne supporte pas encore la version 3.0
-C'est un standard qui permet de définir les interfaces RestFull.
+
 
 Dans les lignes qui suivent nous allons donc voir comment créer, le code du Webhook qui va gérer les abonnements, le fichier de définition OpenAPI et les différentes implications entre ces deux composants.
 
@@ -327,41 +328,35 @@ Ceci va nous permettre de construire notre url de suppression sous la forme /eve
   "schemes": [ "https" ],
 ```
 
-Enfin pour invoquer nos différents workflow un simple POST sur les URL de rappels envoyées par Logic App/Power Automate lorsque l'évènement se produit
+Enfin pour invoquer nos différents workflow un simple POST sur les URL de rappels envoyées par Logic App/Power Automate lorsque l'évènement se produit.
 
 ```CSharp
-[HttpPost, Route("/fire/neworder")]        
+[HttpPost, Route("/fire/instore")]
 [AllowAnonymous]
-public async Task<IActionResult> FireNewOrder([FromBody] Order newOrder)
+public async Task<IActionResult> FireInstore([FromBody] InStore inStore)
 {
-    // Sauvegarde la nouvelle commande
-    _newOrders.Orders.Add(newOrder);
-    // Retrouve les abonnements à Logic App ou Power Automate
-    // 
-    var newOrderSubscriptions = _subscriptions
-                    .Where(s => s.Event == TypeEvent.NewOrder)
+    var inStoreSubscriptions = _subscriptions
+                    .Where(s => s.Event == TypeEvent.InStore)
                     .Select(s => s).ToList();
     var client = _clientFactory.CreateClient();
-    foreach (var sub in newOrderSubscriptions)
+    foreach (var instore in inStoreSubscriptions)
     {
-        string jsonData = JsonConvert.SerializeObject(newOrder);
+        string jsonData = JsonConvert.SerializeObject(inStore);
         StringContent stringContent = new StringContent(jsonData, System.Text.Encoding.UTF8, "application/json");
         try
         {
-            await client.PostAsync(sub.CallBackUrl, stringContent);
+            await client.PostAsync(instore.CallBackUrl, stringContent);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
+            Console.WriteLine(ex.Message);
         }
     }
-    return Accepted($"Il y a {newOrderSubscriptions.Count} abonnement(s) au connecteur");
+    return Accepted($"Il y a {inStoreSubscriptions.Count} abonnement(s) au connecteur");
 }
 ```
 
+>Note: A des fins de démonstration et simplicité j'ai choisi d'intégrer le déclenchement de l'évènement avec le code d'inscription des abonnements.
 
-
-Voila vous êtes prêt à créer votre 1er connecteur à base de déclencheur 
-
-
-
+Les connecteurs personnalisés à base de déclencheurs, vont vous permettre de dévérouiller des scénarios, sans pour autant lourdement investir dans le développement de solutions personnalisées.
+De s'intégrer facilement et rapidement aux systèmes d'informations de vos clients et de leur permettre de construire leur propre solution de workflow.
