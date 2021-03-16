@@ -147,6 +147,6 @@ pour une intégration réussi il faudra rajouter à la définition de notre opé
 
 La propriété "x-ms-trigger": "single" va indiquer à Logic App et Power Automate d'afficher notre opération en tant que déclencheur dans l'éditeur de connecteur personnalisé.
 
-![DEFINITIION]](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Definition.png)
+![DEFINITIION](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Definition.png)
 > Plusieurs remarques :
 
