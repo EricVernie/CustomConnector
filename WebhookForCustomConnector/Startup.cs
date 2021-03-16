@@ -38,7 +38,7 @@ namespace WebhookForCustomConnector
             {
                 Configuration.Bind("AzureAd", options);
                 options.TokenValidationParameters.ValidAudiences = new string[] { options.Audience, $"api://{options.Audience}" };
-                //options.SaveToken = true;
+                
             });
 
             services.AddHttpClient();

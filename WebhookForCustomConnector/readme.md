@@ -1,10 +1,10 @@
 
 # Développer un connecteur personnalisé pour Power Automate et Azure Logic App à base de déclencheurs (Triggers)
 
-Je ne reviendrais pas sur la manière de créer un connecteur personnalisé, je vous laisse le soin d’aller voir la [documentation en ligne](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/define-openapi-definition)
+Je ne vais pas revenir ici, sur la manière de créer un connecteur personnalisé, je vous laisse le soin d’aller voir la [documentation en ligne](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/define-openapi-definition).
+L'idée est de vous montrer comment préparer les élèments necessaires afin de pouvoir créer un connecteur à base de déclencheur.
 
-
-Pour résumé, un connecteur peut-être de type :
+Néanmoins, pour résumé, un connecteur peut-être de type :
 
 **Action**
 
@@ -12,13 +12,13 @@ _Par exemple, vous utiliseriez une action pour rechercher, écrire, mettre à jo
 
 **Déclencheurs**
 
-Polling :
+*Polling* :
 _Ces déclencheurs appellent votre service selon une fréquence spécifiée pour vérifier l’existence de nouvelles données. Lorsque de nouvelles données sont disponibles, cela entraîne une nouvelle exécution de votre instance de workflow avec les données en entrée_
 
-Webhook :
+*Webhook* :
 _Ces déclencheurs écoutent les données sur un point de terminaison, c'est-à-dire qu'ils attendent qu'un événement se produise. L'occurrence de cet événement provoque une nouvelle exécution de votre instance de workflow._
 
-Dans ce tutorial, nous allons nous concentrer sur un connecteur de type Déclencheur WebHook.
+Dans cet article, nous allons nous concentrer sur un connecteur de type **Déclencheur WebHook**.
 
 Lorsqu’un évènement se passe sur votre plate-forme, le déclencheur en informera le connecteur qui pourra alors initier un workflow Logic App ou Power Automate.
 
@@ -28,7 +28,7 @@ Les avantages sont nombreux, du fait même qu’ils existent de nombreux autres 
 
 - Ils vous permettront de vous intégrer à moindre frais et facilement à la plate-forme Microsoft 365, à des systèmes tiers Dynamics, Sales Force, à de l’intelligence artificielle etc…, et ceci que cela soit dans le cloud ou on-premise.
 
-- Pas besoin de développer une solution d’intégration pour chaque système les connecteurs disponibles sont fait pour ça.
+- Pas besoin de développer une solution d’intégration pour chaque système, les connecteurs disponibles sont fait pour ça.
 
 - Vous permettez à vos clients non-développeurs de créer facilement leurs propres workflows d’intégration à l’aide de Power Automate.
 
@@ -93,7 +93,7 @@ Ne pas la mettre défini l'opération comme étant une Action.
 
 ```
 
-Outre les propriétés description et summary, la propriété **"operationId":"NewInstoreProduct"** qui définie le nom du déclencheur et la propriété **parameters** trés importante, car elle définie en entrée **"in":"body"**, c'est à dire dans le corps du message le paramètre nommé arbitrairement **Webhook** qui inclura l'url de rappel fournie par Logic App/Power Automate, dont voici sa représentation en définition OpenAPI.
+Outre les propriétés description et summary, la propriété **"operationId":"NewInstoreProduct"** qui définie le nom du déclencheur, la propriété **parameters** est trés importante, car elle définie en entrée **"in":"body"**, c'est à dire dans le corps du message le paramètre nommé arbitrairement **Webhook** qui inclura l'url de rappel fournie par Logic App/Power Automate, dont voici sa représentation.
 
 ```json
 "Webhook": {
@@ -112,13 +112,11 @@ Outre les propriétés description et summary, la propriété **"operationId":"N
     }
 ```
 
-Ici toutes les propriétés sont importantes.
-
 **"required":["callBackUrl"]** indique que le champ callBackUrl est requis.
 
 **"x-ms-notification-url":"true"** va indiquer à Logic App/Power Automate de placer l'URL de rappel dans le champ callBackUrl.
 
-**x-ms-visibility:"internal"** indique que le champ doit être masqué aux utilisateurs.
+**"x-ms-visibility":"internal"** indique que le champ doit être masqué aux utilisateurs.
 
 Voici sa représentation en C#, ce n'est ni plus ni moins qu'une classe avec une propriété de type string
 
@@ -141,9 +139,12 @@ public IActionResult NewInstoreProduct([FromBody] Webhook body)
 }
 ```
 
-Cette méthode sera appelée par Logic App/Power Automate avec l'url de rappel contenu dans la propriété **body.CallBackUrl**.
+Cette méthode sera appelée par Logic App/Power Automate avec l'url de rappel contenu dans la propriété **WebHook.CallBackUrl**.
+
 Nous reviendrons plus en détails plus tard sur la méthode **AddsSubscription** qui sauvegarde entre autre l'url de rappel, mais notez que cette méthode retourne dans l'entête **Location** l'url qu'appelera Logic App/Power Automate, lorsque le connecteur personnalisé ou le workflow l'utilisant sera supprimé.
+
 Le format de cette url "https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}/" est arbitraire, elle dépendra uniquement de votre logique.
+
 Ici j'ai décidé de la constituer du champ **Oid** qui représente un numéro d'identification de l'utilisateur authentifié et du champ **Id** numéro de la souscription renvoyé par Logic App/Power Automate que nous verrons un peu plus tard lorsque j'aborderai la sécurité du connecteur.
 
 La définition OpenAPI doit donc inclure impérative une définition pour la suppression de l'abonnement, et ceci en accord avec le format de cette url.
@@ -198,12 +199,13 @@ La représentation C# est la suivante :
 
 >Note : C'est une représentation trés naive, car les abonnements sont placés en mémoire dans une simple liste. Il faudra sans doute penser à un système plus robuste et autonome. Mais cela suffit ici pour nos besoins de démonstrations.
 
-Si vous souhaitez voir tout de suite ce que cela donne avec l'éditeur de connecteur personnalisé, voici le [Lien sur le fichier de définition](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/OpenApiDefinition/OpenApiV2ForConnector.json) de ce tutoriel, puis en suivant les instructions [ici](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/define-openapi-definition)
+Si vous souhaitez voir tout de suite ce que cela donne avec l'éditeur de connecteur personnalisé, voici le [Lien sur le fichier de définition](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/OpenApiDefinition/OpenApiV2ForConnector.json), puis en suivant les instructions [ici](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/define-openapi-definition)
 
-Reste maintenant à aborder la partie sécurité de notre connecteur.
+### Securité du connecteur
 
-En effet il est important que l'utilisateur puisse s'identifier avant de pouvoir l'utiliser. Nous utiliserons dans notre cas Azure Active Directory
+Il est important que l'utilisateur puisse s'identifier avant de pouvoir utiliser le connecteur. Nous utiliserons dans notre cas Azure Active Directory
 
+#### Inscrire une application dans Azure Active Directory
 Voici les différentes étapes à suivre :
 
 1. A l'aide du portail https://aad.portal.azure.com/, selectionnez "Azure Active Directory" | Inscription d'applications
@@ -248,27 +250,118 @@ Voici les différentes étapes à suivre :
 
 10. Retournez sur le portail Azure Active Directory https://aad.portal.azure.com, selectionnez l'application que vous venez d'inscrire
 
-11. Selectionnez "Authentification" | "+ Ajoutez une plateforme" | Application Web | Web | Copiez l'uri de redirection
+11. Selectionnez "Authentification" | "+ Ajoutez une plateforme" | Application Web | Web | Copiez l'URI de redirection
 
     ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/URI.png)
 
-
-
-
-
-
-
-Il est possible dans le fichier de définition de préparer le terrain, en y ajoutant la propriété **securityDefinitions** comme indiqué dans l'extrait suivant : 
+12. Editez le fichier [appsettings.json](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/appsettings.json) et copiez vos informations de l'application Azure Active Directory dans la section **AzureAd**
 
 ```json
-"securityDefinitions": {
-    "oauth2_auth": {
-      "type": "oauth2",
-      "flow": "accessCode",
-      "authorizationUrl": "https://login.windows.net/common/oauth2/authorize",
-      "tokenUrl": "https://login.windows.net/common/oauth2/authorize"
-    }
-  }
+ "AzureAd": {
+    "Instance": "https://login.microsoftonline.com/",
+    "Domain": "[VOTRE NOM DE DOMAINE ex demozonex.com]",
+    "Audience": "[copiez ID d'application (client)]",
+    "TenantId": "[copiez ID du tenant Azure Active Directory]",
+    "ClientId": "[copiez ID d'application (client)]"
+  },
 ```
 
-Ensuite il faut que le code C# puisse gérér
+Maintenanons que nous avons mis en place la sécurité de notre connecteur revenons maintenant sur la méthode **AddSubscription**.
+
+Cette méthode nous permet de sauvegarder, non seulement le numéro de l'abonnement du workflow **x-ms-workflow-subscription-id**, mais également le numéro d'identification Azure Active Directory de l'utilisateur connecté.
+Ceci va nous permettre de construire notre url de suppression sous la forme /event/remove/{subscription.Oid}/{subscription.Id}
+
+```CSharp
+ private Subscription AddSubscription(Webhook body,TypeEvent typeEvent, IHeaderDictionary headers)
+ {
+
+     Subscription subscription = null;
+     // Récupère le numéro d'abonnement du workflow afin de le stocker pour le retrouver
+     // pour suppression.
+     var SubId = headers.Where(x => x.Key == "x-ms-workflow-subscription-id")
+                        .Select(x => x)
+                        .First();
+     // L'entête doit forcement contenir un jeton d'accès sous la forme
+     // Authorization:Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi.....
+     var BearerToken = headers.Where(x => x.Key == "Authorization")
+                    .Select(x => x)
+                    .First();                       
+     string Token = BearerToken.Value;
+
+     // Supprime le mot Bearer + l'espace entre le mot et le jeton
+     Token = Token.Remove(0, 7);
+
+     var Handler = new JwtSecurityTokenHandler();
+     var AccessToken = Handler.ReadJwtToken(Token);
+
+     subscription = new Subscription
+     {
+         Event = typeEvent,
+         CallBackUrl = body.CallBackUrl,
+         Id = SubId.Value,
+         Name = GetClaimValue(AccessToken, "name"),
+         Upn = GetClaimValue(AccessToken, "upn"),
+         Oid = GetClaimValue(AccessToken, "oid")
+     };
+     
+     // Le stockage des abonnements se fait en mémoire
+     // Bien évidement il faudra utiliser un système plus robuste.
+     _subscriptions.Add(subscription);
+     return subscription;
+ }
+```
+
+13. [Publiez l'application sur Azure avec Visual Stduio 2019](https://docs.microsoft.com/fr-fr/visualstudio/deployment/quickstart-deploy-to-azure?view=vs-2019)
+
+14. Une fois l'application publiée, vous devez avoir un FQDN du style **[NON DE L'APPLICATION].azurewebsites.net** qu'il faudra renseigner dans la propriété **host** du fichier de définition.
+
+```json
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Exemple de connecteur personnalisé",
+    "version": "v1"
+  },
+  "host": "webhookforcustomconnector.azurewebsites.net",
+  "basePath": "/",
+  "schemes": [ "https" ],
+```
+
+Enfin pour invoquer nos différents workflow un simple POST sur les URL de rappels envoyées par Logic App/Power Automate lorsque l'évènement se produit
+
+```CSharp
+[HttpPost, Route("/fire/neworder")]        
+[AllowAnonymous]
+public async Task<IActionResult> FireNewOrder([FromBody] Order newOrder)
+{
+    // Sauvegarde la nouvelle commande
+    _newOrders.Orders.Add(newOrder);
+    // Retrouve les abonnements à Logic App ou Power Automate
+    // 
+    var newOrderSubscriptions = _subscriptions
+                    .Where(s => s.Event == TypeEvent.NewOrder)
+                    .Select(s => s).ToList();
+    var client = _clientFactory.CreateClient();
+    foreach (var sub in newOrderSubscriptions)
+    {
+        string jsonData = JsonConvert.SerializeObject(newOrder);
+        StringContent stringContent = new StringContent(jsonData, System.Text.Encoding.UTF8, "application/json");
+        try
+        {
+            await client.PostAsync(sub.CallBackUrl, stringContent);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+        }
+    }
+    return Accepted($"Il y a {newOrderSubscriptions.Count} abonnement(s) au connecteur");
+}
+```
+
+
+
+Voila vous êtes prêt à créer votre 1er connecteur à base de déclencheur 
+
+
+
