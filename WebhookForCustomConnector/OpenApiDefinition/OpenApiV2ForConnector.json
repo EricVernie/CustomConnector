@@ -156,8 +156,8 @@
           "x-ms-notification-url": true,
           "x-ms-visibility": "internal",
           "required": [ "callBackUrl" ],
-          "description": "callBackUrl",
-          "title": "callBackUrl",
+          "description": "URL de rappel",
+          "title": "URL de rappel",
           "type": "string"
         }
       }

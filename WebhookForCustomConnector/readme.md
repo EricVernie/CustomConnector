@@ -58,7 +58,8 @@ Dans les lignes qui suivent nous allons donc voir comment créer, le code du Web
 
 [Microsoft a étendu la définition OpenAPI](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/openapi-extensions) pour ses propres besoins, afin de pouvoir l'intégrer à Logic App et à Power Automate.
 
-Pour définir un déclencheur, il faut rajouter la propriété "x-ms-trigger": "single" qui va indiquer à Logic App et Power Automate d'afficher l'opération en tant que déclencheur dans l'éditeur de connecteur personnalisé, comme illustré sur la figure suivante :
+Pour définir un déclencheur, il faut rajouter la propriété **"x-ms-trigger": "single"** qui va indiquer à Logic App et Power Automate d'afficher l'opération en tant que déclencheur dans l'éditeur de connecteur personnalisé, comme illustré sur la figure suivante.
+Ne pas la mettre défini l'opération comme étant une Action.
 
 ![DEFINITIION](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Definition.png)
 
@@ -91,98 +92,109 @@ Pour définir un déclencheur, il faut rajouter la propriété "x-ms-trigger": "
 
 ```
 
+Outre les propriétés description et summary, la propriété **"operationId":"NewInstoreProduct"** qui définie le nom du déclencheur et la propriété **parameters** trés importante, car elle définie en entrée **"in":"body"**, c'est à dire dans le corps du message le paramètre nommé arbitrairement **Webhook** qui inclura l'url de rappel fournie par Logic App/Power Automate, dont voici sa représentation en définition OpenAPI.
 
+```json
+"Webhook": {
+      "type": "object",
+      "required": [ "callBackUrl" ],
+      "properties": {
+        "callBackUrl": {
+          "x-ms-notification-url": true,
+          "x-ms-visibility": "internal",
+          "required": [ "callBackUrl" ],
+          "description": "URL de rappel",
+          "title": "URL de rappel",
+          "type": "string"
+        }
+      }
+    }
+```
 
-Par exemple le code CSharp suivant :
+Ici toutes les propriétés sont importantes.
+
+**"required":["callBackUrl"]** indique que le champ callBackUrl est requis.
+
+**"x-ms-notification-url":"true"** va indiquer à Logic App/Power Automate de placer l'URL de rappel dans le champ callBackUrl.
+
+**x-ms-visibility:"internal"** indique que le champ doit être masqué aux utilisateurs.
+
+Voici sa représentation en C#, ce n'est ni plus ni moins qu'une classe avec une propriété de type string
 
 ```CSharp
 public class Webhook
 {
     public string CallBackUrl { get; set; }
 }
+```
 
-[HttpPost, Route("/event/neworder")]
-public IActionResult NewEcommerceOrder([FromBody] Webhook body)
+Et voici la réprésentation C# de l'opération **NewInstoreProduct**
+
+```CSharp
+[HttpPost, Route("/event/instore")]
+public IActionResult NewInstoreProduct([FromBody] Webhook body)
 {
-    //code omis pour plus de clarté
-    return new CreatedResult(location, subscription);
+  Subscription subscription = AddSubscription(body, TypeEvent.InStore, this.Request.Headers);
+  string location = $"https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}/"; 
+  return new CreatedResult(location, null);
 }
 ```
 
-Se matérialise en OpenAPI par :
+Cette méthode sera appelée par Logic App/Power Automate avec l'url de rappel contenu dans la propriété body.CallBackUrl.
+Nous reviendrons plus en détails plus tard sur la méthode **AddsSubscription** qui sauvegarde entre autre l'url de rappel, mais notez que cette méthode retourne dans l'entête **Location** l'url qu'appelera Logic App/Power Automate, lorsque le connecteur personnalisé ou le workflow l'utilisant sera supprimé.
+Le format de cette url "https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}/" est arbitraire, elle dépendra uniquement de votre logique.
+Ici j'ai décidé de la constituer du champ **Oid** qui représente un numéro d'identification de l'utilisateur authentifié et du champ **Id** numéro de la souscription renvoyé par Logic App/Power Automate que nous verrons un peu plus tard lorsque j'aborderai la sécurité du connecteur.
+
+La définition OpenAPI doit donc inclure impérative une définition pour la suppression de l'abonnement, et ceci en accord avec le format de cette url.
 
 ```json
-"/event/neworder": {      
-      "post": {        
-        "operationId": "NewEcommerceOrder",        
+ "/event/remove/{oid}/{id}": {
+      "delete": {
+        "description": "Supprimer l'abonnement",
+        "summary": "Supprimer l'abonnement",
+        "operationId": "RemoveSubscription",
+        "x-ms-visibility": "internal",
         "parameters": [
           {
-            "in": "body",
-            "name": "Webhook",
+            "in": "path",
+            "name": "oid",
             "required": true,
-            "schema": { "$ref": "#/definitions/Webhook" }
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identification de l'abonnement",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
-          "201": {
-            "description": "Success",
-            "schema": { "$ref": "#/definitions/Subscription" }
+          "200": {
+            "description": "Success"
           }
         }
       }
-    },
-"definitions": {
-    "TypeEvent": {
-      "format": "int32",
-      "enum": [1,2],
-      "type": "integer"
-    }, 
-    "Subscription": {
-      "type": "object",
-      "properties": {
-        "event": {
-          "$ref": "#/definitions/TypeEvent"
-        },
-        "id": {"type": "string"},
-        "callBackUrl": {"type": "string"},
-        "upn": {"type": "string"},
-        "oid": {"type": "string"},
-        "name": {"type": "string"}
-      }
-    },
-    "Webhook": {
-      "type": "object",      
-      "properties": {
-        "callBackUrl": { "type": "string"}
-        }
-      }
     }
-  }
-```
-
-Cet extrait défini l'opération _NewEcommerceOrder_ mais pour l'instant telle  quelle, elle sera considérée par Logic App et Power Automate comme un type Action, et non pas comme un déclencheur.
-
-
-
-pour une intégration réussi il faudra rajouter à la définition de notre opération les propriétés suivantes, 
-**_x-ms-notification-content_** et **_x-ms-trigger_** de la manière suivante
-
-```json
- "/event/neworder": {
-      "x-ms-notification-content": {
-        "description": "Création d'une nouvelle commande"
-      },
-      "post": {
-        "description": "Lorsqu'une nouvelle commande est créée (version d'évaluation)",
-        "summary": "Lorsqu'une nouvelle commande est créée  (version d'évaluation)",
-        "operationId": "NewEcommerceOrder",
-        "x-ms-trigger": "single",
 
 ```
 
+Ici nous définissons deux paramètres **oid** et **id** requis qui seront placés dans l'url elle même **"in":"path"**
+Vous noterez que c'est une opération de type Action, il est donc impératif qu'elle ne soit pas visible pour les utilisateurs **"x-ms-visibility":"internal"**
 
+La représentation en C# est la suivante :
 
+```CSharp
+ [HttpDelete, Route("/event/remove/{oid}/{id}")]
+ public IActionResult RemoveSubscription(string oid,string id)
+ {
+    var itemToRemove = _subscriptions.Single(r => r.Id == id && r.Oid == oid);
+    _subscriptions.Remove(itemToRemove);           
+    return Ok();
+}
+```
 
+>Note : C'est une représentation trés naive, car les abonnements sont placés en mémoire dans une simple liste. Il faudra sans doute penser à un système plus robuste et autonome. Mais cela suffit ici pour nos besoins de démonstrations.
 
+Si vous souhaitez voir tout de suite ce que cela donne avec l'éditeur de connecteur personnalisé voici le [Lien sur le fichier de définition](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/OpenApiDefinition/OpenApiV2ForConnector.json) de ce tutoriel.
 
-[Lien sur le fichier de définition](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/OpenApiDefinition/OpenApiV2ForConnector.json) de ce tutoriel.

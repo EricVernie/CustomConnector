@@ -71,7 +71,7 @@ namespace WebHookForCustomConnector.Controllers
             Subscription subscription = AddSubscription(body, TypeEvent.InStore, this.Request.Headers);
             string location = $"https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}/";
             _logger.LogInformation($"Location: {location}");
-            return new CreatedResult(location, subscription);
+            return new CreatedResult(location, null);
         }
       
         [HttpGet, Route("/list/neworders")]
