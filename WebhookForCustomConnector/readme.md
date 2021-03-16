@@ -237,6 +237,10 @@ c'est l'url de redirection. Comme illustré sur la figure suivante :
 
 Dans les champs :
 
+Choisir Oauth2
+
+Fouornisseur d'identité : Azure Active Directory
+
 Client id : copiez ID d'application (client)
 
 Client Secret : copiez le secret de l'application
