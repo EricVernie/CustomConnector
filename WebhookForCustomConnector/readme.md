@@ -61,7 +61,35 @@ Dans les lignes qui suivent nous allons donc voir comment créer, le code du Web
 Pour définir un déclencheur, il faut rajouter la propriété "x-ms-trigger": "single" qui va indiquer à Logic App et Power Automate d'afficher l'opération en tant que déclencheur dans l'éditeur de connecteur personnalisé, comme illustré sur la figure suivante :
 
 ![DEFINITIION](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Definition.png)
+
 ```json
+"/event/instore": {
+      "x-ms-notification-content": {
+        "description": "Arrivée de nouveaux produits"
+      },
+      "post": {
+        "description": "Lorsque qu'un nouveau produit arrive dans le magasin (version d'évaluation)",
+        "summary": "Lorsque qu'un nouveau produit arrive dans le magasin (version d'évaluation)",
+        "operationId": "NewInstoreProduct",
+        "x-ms-trigger": "single",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Webhook",
+            "schema": {
+              "$ref": "#/definitions/Webhook"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+
+```
 
 
 
