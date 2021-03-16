@@ -40,4 +40,4 @@ Par exemple, imaginons le scénario suivant. Je suis directeur de secteur d’un
 Bien évidemment, vous avez prévu le cas, et votre plate-forme le gère correctement et affiche les notifications. Mais en tant que directeur, je suis souvent sur les routes, pas toujours connecté à mon PC. 
 En créant un connecteur personnalisé, vous allez ajouter de la souplesse à votre système, en permettant au directeur (ou à son IT) de créer un Workflow très simple, qui va dés réception d’une marchandise notifier l’application Mobile Power Automate, comme illustrer sur l’image suivante.
 
-![InitCode](https://github.com/EricVernie/CloudNativeAppForAzureDev/blob/step1/docs/step1.png)
+![PowerAutomate](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/PowerAutomate.png)
