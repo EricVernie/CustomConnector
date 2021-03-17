@@ -238,8 +238,35 @@ La représentation C# est la suivante :
 
 >Note : C'est une représentation trés naive, car les abonnements sont placés en mémoire dans une simple liste. Il faudra sans doute penser à un système plus robuste et autonome, afin de permettre à votre API d'avoir accès aux URL de rappels. Mais cela suffit ici pour nos besoins de démonstrations.
 
-En l'état, il est possible de commencer à tester 
-Si vous souhaitez voir tout de suite ce que cela donne avec l'éditeur de connecteur personnalisé, voici le [Lien sur le fichier de définition](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/OpenApiDefinition/OpenApiDefinition.json), puis en suivant les instructions [ici](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/define-openapi-definition)
+En l'état, il est possible de commencer à tester la création du connecteur personnalisé,
+Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous pouvez obtenir un essai gratuit en suivant la procèdure [ici](https://docs.microsoft.com/fr-fr/power-automate/sign-up-sign-in)
+
+1. Récupèrez le fichier [définition](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/OpenApiDefinition/OpenApiDefinition.json)
+
+2. Connectez-vous au portail https://make.powerapps.com/
+
+3. Dans le panneau gauche, selectionnez "Données" | "Connecteurs Personnalisés"
+
+4. En haut à droite selectionnez "+ Nouveau connecteur personnalisé" | "Importer un fichier OpenAPI"
+
+5. Dans la boîte de dialogue qui apparait, donnez un nom au connecteur puis | Importer le fichier que vous avez récupèrer à l'étape 1
+
+6. Allez ensuite dans l'onglet 3. Définition afin de vérifier qu'aucune erreur n'est survenue. Vous noterez à ce stade qu'aucun Déclencheur n'est disponible. Ceci peut-être déroutant, mais ils sont bien présent. Vous pourrez le vérifier en éditant le swagger dans l'interface.
+
+7. Selectionnez "Créer le connecteur". Si tout se passe bien, le connecteur est crée.
+
+8. Nous allons maintenant créer un Flux en selectionnant dans le panneau Gauche "Flux"
+
+9. Puis en haut de l'écran "+ Nouveau Flux" | "Flux de cloud automatisé"
+
+10. Donnnez un nom au flux, puis activez le bouton "Ignorer", afin de créer un flux vierge.
+
+11. Selectionnez l'onglet "Personnalisé" | puis selectionnez le connecteur personnalisé que vous venez de créer
+
+12. Deux déclencheurs devrait apparaitre comme illustré sur la figure suivante :
+![DECLENCHEUR](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/declencheur.png)
+
+, puis en suivant les instructions [ici](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/define-openapi-definition)
 
 
 
@@ -248,7 +275,8 @@ Si vous souhaitez voir tout de suite ce que cela donne avec l'éditeur de connec
 
 Il est important que l'utilisateur puisse s'identifier avant de pouvoir utiliser le connecteur. Nous utiliserons dans notre cas Azure Active Directory
 
-#### Inscrire une application dans Azure Active Directory
+## Inscrire une application dans Azure Active Directory
+
 Voici les différentes étapes à suivre :
 
 1. A l'aide du portail https://aad.portal.azure.com/, selectionnez "Azure Active Directory" | Inscription d'applications
