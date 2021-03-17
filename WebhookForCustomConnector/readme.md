@@ -51,29 +51,35 @@ Les avantages sont nombreux, du fait même qu’ils existent de nombreux autres 
 
 - Vous permettez à vos clients non-développeurs de créer facilement leurs propres workflows d’intégration à l’aide de Power Automate.
 
-## Logique d'un déclencheur dans Logic App et Power Automate
+## Logique d'un déclencheur webhook dans Logic App et Power Automate
 
-1. Lors de l'enregistrement d'un Workflow, Logic App/Power Automate s'abonne au déclencheur en lui passant une url de rappel dans le corps du message
-
+1. Lors de l'enregistrement d'un Workflow, Logic App/Power Automate s'abonne au déclencheur, en lui passant une url de rappel dans le corps du message  
+    |||
+    | :------------- | :---------- |
+    |Url|https://prod-00.francecentral.logic.azure.com/workflows/0182d35837c1417d859da07f8752bc9d/triggers/Lorsque_qu'un_nouveau_produit_arrive_dans_le_magasin....|
 2. Le déclencheur sauvegarde dans son système cette url de rappel pour une utilisation future
 
 3. Le déclencheur **doit impérativement retourner** à Logic App/Power Automate, **une url de suppression de l'abonnement**
 
-4. Lorsqu'un évènement se passe, par exemple l'ajout d'une nouvelle commande, votre système initie le workflow à l'aide de l'url de rappel
+4. Lorsqu'un évènement se passe, par exemple l'arrivée d'un produit en magasin, votre système initie le workflow à l'aide de l'url de rappel.
 
-L'intégration d'un connecteur personnalisé avec Logic App et Power Automate se fait par l'intermédiaire d'un fichier au format json, qui suit la spécification OpenAPI plus connue sous le nom de spécification [Swagger](https://swagger.io) **version 2.0**, standard qui permet de définir les interfaces RestFull.
+## Définition OpenAPI
+
+L'intégration d'un connecteur personnalisé avec Logic App et Power Automate se fait par l'intermédiaire d'un fichier au format json, qui suit la spécification OpenAPI **version 2.0**, plus connue sous le nom de spécification [Swagger](https://swagger.io) , standard qui permet de définir les interfaces RestFull.
 
 >**Note:** Logic App et Power Automate, ne supporte pas encore la version 3.0
 
+Dans les lignes qui suivent nous allons donc voir comment :
 
-Dans les lignes qui suivent nous allons donc voir comment créer, le code du Webhook qui va gérer les abonnements, le fichier de définition OpenAPI et les différentes implications entre ces deux composants.
+- Créer le code du Webhook qui va gérer les abonnements
+- Créer le fichier de définition OpenAPI
 
-### Définition d'un déclencheur
+### Définition d'un déclencheur de type Webhook
 
 [Microsoft a étendu la définition OpenAPI](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/openapi-extensions) pour ses propres besoins, afin de pouvoir l'intégrer à Logic App et à Power Automate.
 
-Pour définir un déclencheur, il faut rajouter la propriété **"x-ms-trigger": "single"** qui va indiquer à Logic App et Power Automate d'afficher l'opération en tant que déclencheur dans l'éditeur de connecteur personnalisé, comme illustré sur la figure suivante.
-Ne pas la mettre défini l'opération comme étant une Action.
+Pour définir un déclencheur de type webhook, il faut rajouter la propriété **"x-ms-trigger": "single"** dans la définition, afin d'indiquer à Logic App et Power Automate d'afficher l'opération en tant que déclencheur dans l'éditeur de connecteur personnalisé, comme illustré sur la figure suivante :
+>Note : Ne pas mettre la propriété **"x-ms-trigger"** défini l'opération comme étant une **Action**.
 
 ![DEFINITION](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Definition.png)
 

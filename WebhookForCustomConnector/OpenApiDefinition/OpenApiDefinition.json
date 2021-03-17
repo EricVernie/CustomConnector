@@ -13,6 +13,7 @@
     "/event/neworder": {
       "x-ms-notification-content": {
         "description": "Création d'une nouvelle commande"
+         
       },
       "post": {
         "description": "Lorsqu'une nouvelle commande est créée (version d'évaluation)",
@@ -31,10 +32,7 @@
         ],
         "responses": {
           "201": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Subscription"
-            }
+            "description": "Success"           
           }
         }
       }
@@ -108,38 +106,7 @@
       }
     }
   },
-  "definitions": {
-    "TypeEvent": {
-      "format": "int32",
-      "enum": [
-        1,
-        2
-      ],
-      "type": "integer"
-    },
-    "Subscription": {
-      "type": "object",
-      "properties": {
-        "event": {
-          "$ref": "#/definitions/TypeEvent"
-        },
-        "id": {
-          "type": "string"
-        },
-        "callBackUrl": {
-          "type": "string"
-        },
-        "upn": {
-          "type": "string"
-        },
-        "oid": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        }
-      }
-    },
+  "definitions": {   
     "Webhook": {
       "type": "object",
       "required": [ "callBackUrl" ],
