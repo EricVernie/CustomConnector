@@ -443,6 +443,6 @@ Pour ce faire vous pouvez utiliser l'utilitaire [az cli](https://docs.microsoft.
 
 ensuite la commande az webapp log tail --name [NOM APPLICATION] -g [NOM DU RESSOURCE GROUPE] va vous permettre de vous connecter au log-streaming à partir de votre poste de travail
 
-![LOGS](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/logs.jpg)
+![LOGS](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/logs.png)
 
 
