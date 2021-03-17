@@ -435,3 +435,14 @@ Il y a quand même un peu de boulot et de code à écrire afin de créer le WebH
 
 Appuyez-vous sur [l'écosystème des connecteurs personnalisés](https://docs.microsoft.com/en-us/connectors/connector-reference/) de Logic App/Power Automate, pour fournir à vos clients des solutions clés en main adaptées à leurs besoins.
 
+### Bonus
+
+Si vous avez installé l'application sur Azure, il est possible de s'abonner aux logs du Web Hook afin de pister les erreurs.
+
+Pour ce faire vous pouvez utiliser l'utilitaire [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+
+ensuite la commande az webapp log tail --name [NOM APPLICATION] -g [NOM DU RESSOURCE GROUPE] va vous permettre de vous connecter au log-streaming à partir de votre poste de travail
+
+![LOGS](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/logs.jpg)
+
+
