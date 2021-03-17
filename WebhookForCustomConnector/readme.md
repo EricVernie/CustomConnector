@@ -238,6 +238,39 @@ La représentation C# est la suivante :
 
 >Note : C'est une représentation trés naive, car les abonnements sont placés en mémoire dans une simple liste. Il faudra sans doute penser à un système plus robuste et autonome, afin de permettre à votre API d'avoir accès aux URL de rappels. Mais cela suffit ici pour nos besoins de démonstrations.
 
+### Déclencher un workflow
+
+Pour déclencher un workflow, c'est tout compte fait assez simple, il suffira juste d'un POST sur l'url de rappel renvoyée par Logic App/Power, en n'oubliant pas de passer le contenu du corps du message, comme illustré dans le code c# suivant.
+
+```CSharp
+ [HttpPost, Route("/fire/instore")]
+ [AllowAnonymous]
+ public async Task<IActionResult> FireInstore([FromBody] InStore inStore)
+ {
+     _inStores.Add(inStore);
+     var inStoreSubscriptions = _subscriptions
+                     .Where(s => s.Event == TypeEvent.InStore)
+                     .Select(s => s).ToList();
+
+
+     var client = _clientFactory.CreateClient();
+     foreach (var instore in inStoreSubscriptions)
+     {
+         string jsonData = JsonConvert.SerializeObject(inStore);
+         StringContent stringContent = new StringContent(jsonData, System.Text.Encoding.UTF8, "application/json");
+         try
+         {
+             await client.PostAsync(instore.CallBackUrl, stringContent);
+         }
+         catch (Exception ex)
+         {
+             _logger.LogError(ex.Message);
+         }
+     }
+     return Accepted($"Il y a {inStoreSubscriptions.Count} abonnement(s) au connecteur");
+ }
+```
+
 ### Création du connecteur personnalisé avec Power Automate
 
 En l'état, il est possible de commencer à tester la création du connecteur personnalisé,
@@ -345,7 +378,8 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
 
 ### Test de l'application
 
-1. Editez le fichier [appsettings.json](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/appsettings.json) et copiez vos informations obtenues lors de l'enregsitrement de l'application Azure Active Directory dans la section **AzureAd**.
+1.Editez le fichier [appsettings.json](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/appsettings.json) et copiez vos informations obtenues lors de l'enregsitrement de l'application Azure Active Directory dans la section **AzureAd**.
+
 ```json
  "AzureAd": {
     "Instance": "https://login.microsoftonline.com/",
@@ -372,41 +406,18 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
   "schemes": [ "https" ],
 ```
 
-4. Créez un nouveau flux sur le portail power automate en prenant soin de supprimer toutes références aux connexions du connecteur personnalisé crée plus haut.
+4. Créez un nouveau flux sur le portail power automate en prenant soin de supprimer toutes références aux connexions du connecteur personnalisé crée plus haut. Si tout fonctionne correctement vous devriez voir apparaître le bouton "Se connecter" comme illustrer sur la figure suivante.
 
 ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/SecuriteFlux.png)
 
+5. Une fois le flux crée, selectionnez en haut à droit "Test" | "Manuellement | "Enregistrer et tester"
 
+6. Ensuite allez dans un navigateur, puis entrez l'url https://[NOM DE L'APPLICATION].azurewebsites.net/swagger
 
-Enfin pour invoquer nos différents workflow un simple POST sur les URL de rappels envoyées par Logic App/Power Automate lorsque l'évènement se produit.
+7. Selectionnez la méthode POST /fire/instore
 
-```CSharp
-[HttpPost, Route("/fire/instore")]
-[AllowAnonymous]
-public async Task<IActionResult> FireInstore([FromBody] InStore inStore)
-{
-    var inStoreSubscriptions = _subscriptions
-                    .Where(s => s.Event == TypeEvent.InStore)
-                    .Select(s => s).ToList();
-    var client = _clientFactory.CreateClient();
-    foreach (var instore in inStoreSubscriptions)
-    {
-        string jsonData = JsonConvert.SerializeObject(inStore);
-        StringContent stringContent = new StringContent(jsonData, System.Text.Encoding.UTF8, "application/json");
-        try
-        {
-            await client.PostAsync(instore.CallBackUrl, stringContent);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-    }
-    return Accepted($"Il y a {inStoreSubscriptions.Count} abonnement(s) au connecteur");
-}
-```
+![EXECUTIONFLUX](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/SecuriteFlux.png)
 
->Note: A des fins de démonstration et simplicité j'ai choisi d'intégrer le déclenchement de l'évènement avec le code d'inscription des abonnements.
 
 Les connecteurs personnalisés à base de déclencheurs, vont vous permettre de dévérouiller des scénarios, sans pour autant lourdement investir dans le développement de solutions personnalisées.
 De s'intégrer facilement et rapidement aux systèmes d'informations de vos clients et de leur permettre de construire leur propre solution de workflow.

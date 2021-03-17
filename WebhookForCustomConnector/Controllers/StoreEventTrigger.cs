@@ -169,7 +169,8 @@ namespace WebhookForCustomConnector.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    _logger.LogError(ex.Message);
+
                 }
             }
             return Accepted($"Il y a {inStoreSubscriptions.Count} abonnement(s) au connecteur");
