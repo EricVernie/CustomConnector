@@ -31,6 +31,8 @@ Imaginons le scénario très simple suivant. Je suis directeur d’une grande é
 
 Bien évidemment, vous avez prévu le cas, et votre plate-forme le gère correctement et affiche les notifications. Mais en tant que directeur, je suis souvent sur les routes, pas toujours connecté à mon PC. En créant un connecteur personnalisé, vous allez ajouter de la souplesse à votre système, en permettant au directeur (ou à son IT) de créer un Workflow très simple, qui va par exemple, dés réception d’une marchandise notifier l’application Mobile Power Automate, comme illustrer sur l’image suivante.
 
+![PowerAutomate](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/PowerAutomate.png)
+
 Lorsqu’un évènement se passe sur votre plate-forme, le déclencheur en informera le connecteur qui pourra alors initier un workflow Logic App ou Power Automate.
 
 Les avantages sont nombreux, du fait même qu’ils existent de nombreux autres connecteurs
@@ -43,8 +45,6 @@ Les avantages sont nombreux, du fait même qu’ils existent de nombreux autres 
 
 - Vous permettez à vos clients non-développeurs de créer facilement leurs propres workflows d’intégration à l’aide de Power Automate.
 
-
-![PowerAutomate](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/PowerAutomate.png)
 
 ## Logique d'un déclencheur dans Logic App et Power Automate
 
