@@ -373,6 +373,7 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
 ```
 
 4. Créez un nouveau flux sur le portail power automate en prenant soin de supprimer toutes références aux connexions du connecteur personnalisé crée plus haut.
+
 ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/SecuriteFlux.png)
 
 
