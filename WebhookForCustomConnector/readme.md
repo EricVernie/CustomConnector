@@ -423,7 +423,7 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
     ![EXECUTIONFLUX](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/ExecutionFlux.png)
 
 et sur le mobile.
-    ![POWERAUTOMATE](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/PowerAutomate.jpg)
+    ![POWERAUTOMATE](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/PowerAutomate2.jpg)
 
 
 Les connecteurs personnalisés à base de déclencheurs, vont vous permettre de dévérouiller des scénarios, sans pour autant lourdement investir dans le développement de solutions personnalisées.
