@@ -12,13 +12,14 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Threading.Tasks;
-using WebHookForCustomConnector.DataModel;
+
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
+using WebhookForCustomConnector.DataModel;
 
-namespace WebHookForCustomConnector.Controllers
+namespace WebhookForCustomConnector.Controllers
 {
     //[Authorize]
     [ApiController]
@@ -26,12 +27,14 @@ namespace WebHookForCustomConnector.Controllers
     public class StoreEventTrigger : ControllerBase
     {
         /// <summary>
-        ///
+        /// Contient la liste des abonnements en cours
         /// </summary>
+        /// <remarks></remarks>
+        /// 
         public static List<Subscription> _subscriptions = new List<Subscription>();
 
         public static OrderDetails _newOrders = new OrderDetails();
-
+        public static List<InStore> _inStores = new List<InStore>();
 
         private readonly IHttpClientFactory _clientFactory;
         private readonly TelemetryClient _telemetry;
@@ -44,21 +47,16 @@ namespace WebHookForCustomConnector.Controllers
             _configuration = configuration;
         }
 
-      
 
-        /// <summary>
-        /// Receive a subscription to a webhook.  
-        /// </summary>
-        /// <param name="Subscription">URL to get from Logic Apps or Power Automate- @listCallbackUrl()</param>
-        /// <returns></returns>
+        #region WEBHOOK
+
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost, Route("/event/neworder")]
-        public IActionResult NewEcommerceOrder([FromBody] Webhook body)
+        public IActionResult NewEcommerceOrder([FromBody] CallBack callback)
         {
             _logger.LogInformation("Abonnement à l'évènement 'Lorsqu'une nouvelle commande est créée'");            
-            Subscription subscription = AddSubscription(body,TypeEvent.NewOrder, this.Request.Headers);
-           
+            Subscription subscription = AddSubscription(callback,TypeEvent.NewOrder, this.Request.Headers);           
             string location = $"https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}";
             _logger.LogInformation($"Location: {location}");
             return new CreatedResult(location, null);
@@ -66,110 +64,42 @@ namespace WebHookForCustomConnector.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost, Route("/event/instore")]
-        public IActionResult NewInstoreProduct([FromBody] Webhook body)
-        {
+        public IActionResult NewInstoreProduct([FromBody] CallBack callback)
+        {            
             _logger.LogInformation("Abonnement à l'évènement 'Arrivée de nouveaux produits' ");
-            Subscription subscription = AddSubscription(body, TypeEvent.InStore, this.Request.Headers);
+            Subscription subscription = AddSubscription(callback, TypeEvent.InStore, this.Request.Headers);
             string location = $"https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}/";
             _logger.LogInformation($"Location: {location}");
             return new CreatedResult(location, null);
         }
-      
+       
+        [HttpDelete, Route("/event/remove/{oid}/{id}")]
+        public IActionResult RemoveSubscription(string oid, string id)
+        {
+            var itemToRemove = _subscriptions.Single(r => r.Id == id && r.Oid == oid);
+            _logger.LogInformation($"Suppression de l'abonnement : {id}, pour l'utilisateur '{itemToRemove.Name}'");
+            _subscriptions.Remove(itemToRemove);
+            return Ok();
+        }
+        #endregion
+        #region API
         [HttpGet, Route("/list/neworders")]
         public List<Order> GetListNewOrders()
         {            
             return _newOrders.Orders;
         }
+
+        [HttpGet, Route("/list/InStore")]
+        public List<InStore> GetListInstore()
+        {
+            return _inStores;
+        }
+        
+
         /// <summary>
-        /// Unsubscribe
+        /// Méthode de debug pour vérifier les abonnements
         /// </summary>
-        /// <param name="callbackUrl"></param>
         /// <returns></returns>
-        [HttpDelete, Route("/event/remove/{oid}/{id}")]
-        public IActionResult RemoveSubscription(string oid,string id)
-        {
-
-            var itemToRemove = _subscriptions.Single(r => r.Id == id && r.Oid == oid);
-            
-            _logger.LogInformation($"Suppression de l'abonnement : {id}, pour l'utilisateur {itemToRemove.Name}");            
-
-
-
-            _subscriptions.Remove(itemToRemove);
-            
-            return Ok();
-        }
-
-
-        #region Helpers
-        private string GetClaimValue(JwtSecurityToken token, string claim)
-        {
-            return token.Claims.ToList()
-                                     .Where(x => x.Type == claim)
-                                     .Select(x => x)
-                                     .First().Value;
-
-
-        }
-     
-        private Subscription AddSubscription(Webhook body,TypeEvent typeEvent, IHeaderDictionary headers)
-        {
-
-            Subscription subscription = null;
-            
-            // Récupère le numéro d'abonnement du workflow afin de le stocker pour le retrouver
-            // pour suppression.
-
-            var SubId = headers.Where(x => x.Key == "x-ms-workflow-subscription-id")
-                               .Select(x => x)
-                               .First();
-
-
-            
-            if (User.Identity.IsAuthenticated)
-            {
-                // L'entête doit forcement contenir un jeton d'accès sous la forme
-                // Authorization:Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi.....
-
-                var BearerToken = headers.Where(x => x.Key == "Authorization")
-                               .Select(x => x)
-                               .First();
-                string Token = BearerToken.Value;
-                // Supprime le mot Bearer + l'espace entre le mot et le jeton
-                Token = Token.Remove(0, 7);
-                var Handler = new JwtSecurityTokenHandler();
-                var AccessToken = Handler.ReadJwtToken(Token);
-                subscription = new Subscription
-                {
-                    Event = typeEvent,
-                    CallBackUrl = body.CallBackUrl,
-                    Id = SubId.Value,
-                    Name = GetClaimValue(AccessToken, "name"),
-                    Upn = GetClaimValue(AccessToken, "upn"),
-                    Oid = GetClaimValue(AccessToken, "oid")
-                };
-            }
-            else
-            {
-                subscription = new Subscription
-                {
-                    Event = typeEvent,
-                    CallBackUrl = body.CallBackUrl,
-                    Id = SubId.Value,
-                    Name = "anonymous",
-                    Upn = "none",
-                    Oid = Guid.NewGuid().ToString()
-                };
-            }
-            
-            // Le stockage des abonnements se fait en mémoire
-            // Bien évidement il faudra utiliser un système plus robuste.
-            _subscriptions.Add(subscription);
-            return subscription;
-        }
-        #endregion
-        #region FOR TEST ONLY
-
         [HttpGet]
         [AllowAnonymous]
         public List<Subscription> Get()
@@ -177,10 +107,10 @@ namespace WebHookForCustomConnector.Controllers
             return _subscriptions;
         }
 
-
         /// <summary>
-        /// To Test Fire all event for new Order  - do a GET to this API to fire all triggers subscribed
+        /// Déclenche l'évènement nouvelle commande
         /// </summary>
+        /// <param name="newOrder"></param>
         /// <returns></returns>
         [HttpPost, Route("/fire/neworder")]        
         [AllowAnonymous]
@@ -212,10 +142,17 @@ namespace WebHookForCustomConnector.Controllers
             }
             return Accepted($"Il y a {newOrderSubscriptions.Count} abonnement(s) au connecteur");
         }
+
+        /// <summary>
+        /// Déclenche l'évènement nouveaux produits dans un magasin
+        /// </summary>
+        /// <param name="inStore"></param>
+        /// <returns></returns>
         [HttpPost, Route("/fire/instore")]
         [AllowAnonymous]
         public async Task<IActionResult> FireInstore([FromBody] InStore inStore)
         {
+            _inStores.Add(inStore);
             var inStoreSubscriptions = _subscriptions
                             .Where(s => s.Event == TypeEvent.InStore)
                             .Select(s => s).ToList();
@@ -236,6 +173,74 @@ namespace WebHookForCustomConnector.Controllers
                 }
             }
             return Accepted($"Il y a {inStoreSubscriptions.Count} abonnement(s) au connecteur");
+        }
+        #endregion
+
+        #region Helpers
+        private string GetClaimValue(JwtSecurityToken token, string claim)
+        {
+            return token.Claims.ToList()
+                                     .Where(x => x.Type == claim)
+                                     .Select(x => x)
+                                     .First().Value;
+
+
+        }
+
+        private Subscription AddSubscription(CallBack callback, TypeEvent typeEvent, IHeaderDictionary headers)
+        {
+
+            Subscription subscription = null;
+
+            // Récupère le numéro d'abonnement du workflow afin de le stocker pour le retrouver
+            // pour suppression.
+
+            var SubId = headers.Where(x => x.Key == "x-ms-workflow-subscription-id")
+                               .Select(x => x)
+                               .First();
+
+
+
+            if (User.Identity.IsAuthenticated)
+            {
+                // L'entête doit forcement contenir un jeton d'accès sous la forme
+                // Authorization:Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi.....
+
+                var BearerToken = headers.Where(x => x.Key == "Authorization")
+                               .Select(x => x)
+                               .First();
+                string Token = BearerToken.Value;
+                // Supprime le mot Bearer + l'espace entre le mot et le jeton
+                Token = Token.Remove(0, 7);
+                var Handler = new JwtSecurityTokenHandler();
+                var AccessToken = Handler.ReadJwtToken(Token);
+                subscription = new Subscription
+                {
+                    Event = typeEvent,
+                    CallBackUrl = callback.Url,
+                    Id = SubId.Value,
+                    Name = GetClaimValue(AccessToken, "name"),
+                    Upn = GetClaimValue(AccessToken, "upn"),
+                    Oid = GetClaimValue(AccessToken, "oid")
+                };
+            }
+            else
+            {
+                subscription = new Subscription
+                {
+                    Event = typeEvent,
+                    CallBackUrl = callback.Url,
+                    Id = SubId.Value,
+                    Name = "anonymous",
+                    Upn = "none",
+                    Oid = Guid.NewGuid().ToString()
+                };
+            }
+
+            // Le stockage des abonnements se fait en mémoire
+            // Bien évidement il faudra utiliser un système plus robuste et autonome
+            _subscriptions.Add(subscription);
+            return subscription;
         }
         #endregion
     }

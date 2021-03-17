@@ -33,16 +33,16 @@
         "parameters": [
           {
             "in": "body",
-            "name": "Webhook",
+            "name": "Callback",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Webhook"
+              "$ref": "#/definitions/Callback"
             }
           }
         ],
         "responses": {
           "201": {
-            "description": "Success"           
+            "description": "Success"
           }
         }
       }
@@ -62,9 +62,9 @@
         "parameters": [
           {
             "in": "body",
-            "name": "Webhook",
+            "name": "Callback",
             "schema": {
-              "$ref": "#/definitions/Webhook"
+              "$ref": "#/definitions/Callback"
             }
           }
         ],
@@ -103,6 +103,24 @@
         }
       }
     },
+    "/list/InStore": {
+      "get": {
+        "description": "Récupère la liste des nouveaux produits en magasin (version d'évaluation)",
+        "summary": "Récupère la liste des nouveaux produits en magasin (version d'évaluation)",
+        "operationId": "GetListInstore",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/InStore"
+              }
+            }
+          }
+        }
+      }
+    },
     "/list/neworders": {
       "get": {
         "description": "Récupère la liste des nouvelles commandes (version d'évaluation)",
@@ -120,14 +138,14 @@
     }
   },
   "definitions": {
-    "Webhook": {
+    "Callback": {
       "type": "object",
-      "required": [ "callBackUrl" ],
+      "required": [ "Url" ],
       "properties": {
-        "callBackUrl": {
+        "Url": {
           "x-ms-notification-url": true,
           "x-ms-visibility": "internal",
-          "required": [ "callBackUrl" ],
+          "required": [ "Url" ],
           "description": "URL de rappel",
           "title": "URL de rappel",
           "type": "string"

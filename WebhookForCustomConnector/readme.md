@@ -5,23 +5,17 @@ Cet article assume que vous connaissiez déjà les basiques de la création d'un
 
 Je ne vais donc pas y revenir, mais si tel n'est pas le cas, je vous laisse le soin d’aller voir la [documentation en ligne](https://docs.microsoft.com/fr-fr/connectors/connectors).
 
-Néanmoins, pour résumé rapidement un connecteur
+Néanmoins, pour résumé, un connecteur
 
-_C'est un proxy ou un wrapper autour d’une API qui permet au service sous-jacent de communiquer avec Microsoft Power Automate, Microsoft Power Apps et Azure Logic Apps. Il offre aux utilisateurs un moyen de se connecter à leurs comptes et de tirer parti d’un ensemble d’actions et de déclencheurs prédéfinis pour créer leurs applications et leurs workflows._
+_C'est un proxy ou un wrapper autour d’une API qui permet au service sous-jacent de communiquer avec Microsoft Power Automate, Microsoft Power Apps et Azure Logic Apps. Il offre aux utilisateurs un moyen de se connecter à leurs comptes et de tirer parti d’un ensemble d’actions et de déclencheurs prédéfinis pour créer leurs applications et leurs workflows.
 
 _Chaque connecteur offre un ensemble d’opérations classées comme « Actions » et « Déclencheurs ». Une fois que vous vous êtes connecté au service sous-jacent, ces opérations peuvent être facilement exploitées dans vos applications et vos workflows._
 
-**Action**
-
-_Par exemple, vous utiliseriez une action pour rechercher, écrire, mettre à jour ou supprimer des données dans une base de données._
-
-**Déclencheurs**
-
-*Polling* :
-_Ces déclencheurs appellent votre service selon une fréquence spécifiée pour vérifier l’existence de nouvelles données. Lorsque de nouvelles données sont disponibles, cela entraîne une nouvelle exécution de votre instance de workflow avec les données en entrée_
-
-*Webhook* :
-_Ces déclencheurs écoutent les données sur un point de terminaison, c'est-à-dire qu'ils attendent qu'un événement se produise. L'occurrence de cet événement provoque une nouvelle exécution de votre instance de workflow._
+|Type d'opération| Commentaires|
+| :------------- | :---------- |
+|**Action**| _Par exemple, vous utiliseriez une action pour rechercher, écrire, mettre à jour ou supprimer des données dans une base de données._|
+|**Déclencheurs** _Polling_| _Ces déclencheurs appellent votre service selon une fréquence spécifiée pour vérifier l’existence de nouvelles données. Lorsque de nouvelles données sont disponibles, cela entraîne une nouvelle exécution de votre instance de workflow avec les données en entrée_|
+|**Déclencheurs** _Webhook| _Ces déclencheurs écoutent les données sur un point de terminaison, c'est-à-dire qu'ils attendent qu'un événement se produise. L'occurrence de cet événement provoque une nouvelle exécution de votre instance de workflow._  |
 
 Mon idée ici est de vous montrer comment préparer les élèments necessaires afin de pouvoir créer un connecteur à base de **déclencheur de type Webhook**. 
 
@@ -98,10 +92,10 @@ Pour définir un déclencheur de type webhook, il faut rajouter la propriété *
         "x-ms-trigger": "single",
         "parameters": [
           {
-            "in": "body",
-            "name": "Webhook",
+             "in": "body",
+            "name": "Callback",
             "schema": {
-              "$ref": "#/definitions/Webhook"
+              "$ref": "#/definitions/Callback"
             }
           }
         ],
@@ -114,14 +108,14 @@ Pour définir un déclencheur de type webhook, il faut rajouter la propriété *
     },
 ....
  "definitions": {
-    "Webhook": {
+    "Callback": {
       "type": "object",
-      "required": [ "callBackUrl" ],
+      "required": [ "Url" ],
       "properties": {
-        "callBackUrl": {
+        "Url": {
           "x-ms-notification-url": true,
           "x-ms-visibility": "internal",
-          "required": [ "callBackUrl" ],
+          "required": [ "Url" ],
           "description": "URL de rappel",
           "title": "URL de rappel",
           "type": "string"
@@ -153,46 +147,47 @@ Pour définir un déclencheur de type webhook, il faut rajouter la propriété *
  |description & summary| Chaines de caractères affichées dans l'interface de l'éditeur de Workflow [Conseils sur les chaînes de connecteur](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/connector-string-guidance)|
  |operationId| Id de l'opération|
  |**x-ms-trigger**| Défini une opération déclencheur de type Webhook|
- |**parameters**| Cette propriété est importante car elle définie en entrée **"in":"body"**, c'est à dire dans le corps du message le paramètre nommé arbitrairement **Webhook** qui inclura l'url de rappel fournie par Logic App/Power Automate|
+ |**parameters**| Cette propriété est importante car elle définie en entrée **"in":"body"**, c'est à dire dans le corps du message le paramètre nommé arbitrairement **Callback** qui inclura l'url de rappel fournie par Logic App/Power Automate|
 
  Tous le champs définis dans La définition du Webhook sont important et à ne pas ommettre
 
  |Propriété | Définition|
  | :------------- | :---------- |
- |**"required":["callBackUrl"]** | Indique que le champ callBackUrl est requis. |
- |**"x-ms-notification-url":"true"**| Indique à Logic App/Power Automate de placer l'URL de rappel dans le champ **callBackUrl**.|
+ |**"required":["Url"]** | Indique que le champ Url est requis. |
+ |**"x-ms-notification-url":"true"**| Indique à Logic App/Power Automate de placer l'URL de rappel dans le champ **Url**.|
  |**"x-ms-visibility":"internal"**|Indique que le champ doit être masqué aux utilisateurs.|
 
 Voici sa représentation en C#, ce n'est ni plus ni moins qu'une classe avec une propriété de type string
 
 ```CSharp
-public class Webhook
+public class CallBack
 {
-    public string CallBackUrl { get; set; }
+    public string Url { get; set; }
 }
 ```
 
 Et voici la réprésentation C# de l'opération **NewInstoreProduct**
 
 ```CSharp
-[HttpPost, Route("/event/instore")]
-public IActionResult NewInstoreProduct([FromBody] Webhook body)
-{
-  Subscription subscription = AddSubscription(body, TypeEvent.InStore, this.Request.Headers);
-  string location = $"https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}/"; 
-  return new CreatedResult(location, null);
-}
+public IActionResult NewInstoreProduct([FromBody] CallBack callback)
+{                
+    Subscription subscription = AddSubscription(callback, TypeEvent.InStore, this.Request.Headers);
+    string location = $"https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}/";    
+    return new CreatedResult(location, null);
+}       
 ```
 
-Cette méthode sera appelée par Logic App/Power Automate avec l'url de rappel contenu dans la propriété **WebHook.CallBackUrl**.
+>Note: Cette méthode sera appelée par Logic App/Power Automate avec l'url de rappel contenu dans la propriété **CallBack.Url**.
 
-Nous reviendrons plus en détails plus tard sur la méthode **AddsSubscription** qui sauvegarde entre autre l'url de rappel, mais notez que cette méthode retourne dans l'entête **Location** l'url qu'appelera Logic App/Power Automate, lorsque le connecteur personnalisé ou le workflow l'utilisant sera supprimé.
+### Supression d'un abonnement
 
-Le format de cette url "https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}/" est arbitraire, elle dépendra uniquement de votre logique.
+Lors de l'inscription de l'abonnement du Workflow Logic App/Power Automate la méthode **NewInstoreProduct** est invoquée, c'est à ce moment là qu'il faut que cette méthode retourne dans l'entête **Location** l'url qu'appelera Logic App/Power Automate, afin que l'abonnement soit supprimé. Cette action se déclenche lorsque le connecteur personnalisé n'est plus utilisé ou que le workflow l'utilisant est supprimé.
 
-Ici j'ai décidé de la constituer du champ **Oid** qui représente un numéro d'identification de l'utilisateur authentifié et du champ **Id** numéro de la souscription renvoyé par Logic App/Power Automate que nous verrons un peu plus tard lorsque j'aborderai la sécurité du connecteur.
+Afin de retrouver le bon abonnement à supprimer, j'ai décidé de la constituer d'un identificateur **Oid** représentant l'utilisateur authentifié et de l'identificateur **Id** numéro de la souscription renvoyé par Logic App/Power Automate dans l'entête "x-ms-workflow-subscription-id" (Nous y reviendrons un peu plus tard lorsque j'aborderai la sécurité du connecteur)
 
-La définition OpenAPI doit donc inclure impérative une définition pour la suppression de l'abonnement, et ceci en accord avec le format de cette url.
+Le format de cette url sera donc "/event/remove/{subscription.Oid}/{subscription.Id}/", mais bien évidement ce n'est pas figé et dépendra sans doute de votre propre logique.
+
+La définition OpenAPI pour la suppression de l'abonnement, doit donc reprendre le format de cette url, comme illustré dans l'extrait suivant.
 
 ```json
  "/event/remove/{oid}/{id}": {
@@ -226,9 +221,8 @@ La définition OpenAPI doit donc inclure impérative une définition pour la sup
 
 ```
 
-Ici nous définissons deux paramètres **oid** et **id** requis qui seront placés dans l'url elle même **"in":"path"**.
-
-Vous noterez que c'est une opération de type Action, il est donc impératif qu'elle ne soit pas visible pour les utilisateurs **"x-ms-visibility":"internal"**
+Les deux paramètres **oid** et **id** sont requis et doivent être placés dans l'url elle même **"in":"path"**.
+Comme c'est une opération de type Action, nous ne souhaitons pas qu'elle soit visible dans l'éditeur de workflow pour les utilisateurs **"x-ms-visibility":"internal"**
 
 La représentation C# est la suivante :
 
@@ -242,9 +236,13 @@ La représentation C# est la suivante :
 }
 ```
 
->Note : C'est une représentation trés naive, car les abonnements sont placés en mémoire dans une simple liste. Il faudra sans doute penser à un système plus robuste et autonome. Mais cela suffit ici pour nos besoins de démonstrations.
+>Note : C'est une représentation trés naive, car les abonnements sont placés en mémoire dans une simple liste. Il faudra sans doute penser à un système plus robuste et autonome, afin de permettre à votre API d'avoir accès aux URL de rappels. Mais cela suffit ici pour nos besoins de démonstrations.
 
-Si vous souhaitez voir tout de suite ce que cela donne avec l'éditeur de connecteur personnalisé, voici le [Lien sur le fichier de définition](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/OpenApiDefinition/OpenApiV2ForConnector.json), puis en suivant les instructions [ici](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/define-openapi-definition)
+En l'état, il est possible de commencer à tester 
+Si vous souhaitez voir tout de suite ce que cela donne avec l'éditeur de connecteur personnalisé, voici le [Lien sur le fichier de définition](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/OpenApiDefinition/OpenApiDefinition.json), puis en suivant les instructions [ici](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/define-openapi-definition)
+
+
+
 
 ### Securité du connecteur
 
@@ -287,6 +285,7 @@ Voici les différentes étapes à suivre :
     |  Fournisseur d'identité | Azure Active Directory  |
     |  Client id  | copiez ID d'application (client)|
     |  Client Secret   | copiez le secret de l'application|
+    |  Resource Url | copiez ID d'application (client)* |
     |  Etendue  | copiez l'étendue de l'application|
 
     Une fois le connecteur enregistré, copiez **URL de redirection**, car nous allons finir l'enregistrement de notre application Azure Active Directory.
@@ -404,3 +403,6 @@ public async Task<IActionResult> FireInstore([FromBody] InStore inStore)
 
 Les connecteurs personnalisés à base de déclencheurs, vont vous permettre de dévérouiller des scénarios, sans pour autant lourdement investir dans le développement de solutions personnalisées.
 De s'intégrer facilement et rapidement aux systèmes d'informations de vos clients et de leur permettre de construire leur propre solution de workflow.
+
+
+Il y a un peu de boulot puisque vous devez ....
