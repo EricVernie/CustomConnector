@@ -266,6 +266,14 @@ Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous p
 12. Deux déclencheurs devrait apparaitre comme illustré sur la figure suivante :
 ![DECLENCHEUR](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/declencheurs.png)
 
+13. Selectionnez le 1er, à ce stade comme aucune information de sécurité n'a été ajouté, le connexion se fait automatiquement.
+
+14. Ajoutez une nouvelle étape de type "Notifications" | "Send me a mobile notification"
+
+15. Vous pouvez alors remplir, la zone de texte rapidement, en choisissant du contenu dynamique
+
+![DYNAMIQUE](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/contenudynamique.png)
+
 , puis en suivant les instructions [ici](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/define-openapi-definition)
 
 
