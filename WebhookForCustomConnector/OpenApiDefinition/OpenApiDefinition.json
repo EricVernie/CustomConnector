@@ -9,16 +9,11 @@
   "schemes": [ "https" ],
   "consumes": [ "application/json" ],
   "produces": [ "application/json" ],
-  "securityDefinitions": {
-    "oauth2_auth": {
-      "type": "oauth2",
-      "flow": "accessCode",
-      "authorizationUrl": "https://login.windows.net/common/oauth2/authorize",
-      "tokenUrl": "https://login.windows.net/common/oauth2/authorize"
-    }
-  },
   "paths": {
-    "/event/neworder": {    
+    "/event/neworder": {
+      "x-ms-notification-content": {
+        "description": "Création d'une nouvelle commande"
+      },
       "post": {
         "description": "Lorsqu'une nouvelle commande est créée (version d'évaluation)",
         "summary": "Lorsqu'une nouvelle commande est créée  (version d'évaluation)",
@@ -44,7 +39,10 @@
         }
       }
     },
-    "/event/instore": {      
+    "/event/instore": {
+      "x-ms-notification-content": {
+        "description": "Arrivée de nouveaux produits"
+      },
       "post": {
         "description": "Lorsque qu'un nouveau produit arrive dans le magasin (version d'évaluation)",
         "summary": "Lorsque qu'un nouveau produit arrive dans le magasin (version d'évaluation)",
@@ -150,8 +148,8 @@
           "x-ms-notification-url": true,
           "x-ms-visibility": "internal",
           "required": [ "callBackUrl" ],
-          "description": "callBackUrl",
-          "title": "callBackUrl",
+          "description": "URL de rappel",
+          "title": "URL de rappel",
           "type": "string"
         }
       }

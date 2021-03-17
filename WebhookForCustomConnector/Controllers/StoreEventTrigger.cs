@@ -20,7 +20,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace WebHookForCustomConnector.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("[controller]")]
     public class StoreEventTrigger : ControllerBase
@@ -58,6 +58,7 @@ namespace WebHookForCustomConnector.Controllers
         {
             _logger.LogInformation("Abonnement à l'évènement 'Lorsqu'une nouvelle commande est créée'");            
             Subscription subscription = AddSubscription(body,TypeEvent.NewOrder, this.Request.Headers);
+           
             string location = $"https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}";
             _logger.LogInformation($"Location: {location}");
             return new CreatedResult(location, null);
@@ -87,16 +88,20 @@ namespace WebHookForCustomConnector.Controllers
         [HttpDelete, Route("/event/remove/{oid}/{id}")]
         public IActionResult RemoveSubscription(string oid,string id)
         {
-            _logger.LogInformation($"Suppression de l'abonnement : {id}");
-            
+
             var itemToRemove = _subscriptions.Single(r => r.Id == id && r.Oid == oid);
+            
+            _logger.LogInformation($"Suppression de l'abonnement : {id}, pour l'utilisateur {itemToRemove.Name}");            
+
+
+
             _subscriptions.Remove(itemToRemove);
             
             return Ok();
         }
 
 
-        #region TOOLS
+        #region Helpers
         private string GetClaimValue(JwtSecurityToken token, string claim)
         {
             return token.Claims.ToList()
@@ -120,28 +125,42 @@ namespace WebHookForCustomConnector.Controllers
                                .First();
 
 
-            // L'entête doit forcement contenir un jeton d'accès sous la forme
-            // Authorization:Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi.....
-            var BearerToken = headers.Where(x => x.Key == "Authorization")
-                           .Select(x => x)
-                           .First();                       
-            string Token = BearerToken.Value;
-
-            // Supprime le mot Bearer + l'espace entre le mot et le jeton
-            Token = Token.Remove(0, 7);
-
-            var Handler = new JwtSecurityTokenHandler();
-            var AccessToken = Handler.ReadJwtToken(Token);
-
-            subscription = new Subscription
+            
+            if (User.Identity.IsAuthenticated)
             {
-                Event = typeEvent,
-                CallBackUrl = body.CallBackUrl,
-                Id = SubId.Value,
-                Name = GetClaimValue(AccessToken, "name"),
-                Upn = GetClaimValue(AccessToken, "upn"),
-                Oid = GetClaimValue(AccessToken, "oid")
-            };
+                // L'entête doit forcement contenir un jeton d'accès sous la forme
+                // Authorization:Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi.....
+
+                var BearerToken = headers.Where(x => x.Key == "Authorization")
+                               .Select(x => x)
+                               .First();
+                string Token = BearerToken.Value;
+                // Supprime le mot Bearer + l'espace entre le mot et le jeton
+                Token = Token.Remove(0, 7);
+                var Handler = new JwtSecurityTokenHandler();
+                var AccessToken = Handler.ReadJwtToken(Token);
+                subscription = new Subscription
+                {
+                    Event = typeEvent,
+                    CallBackUrl = body.CallBackUrl,
+                    Id = SubId.Value,
+                    Name = GetClaimValue(AccessToken, "name"),
+                    Upn = GetClaimValue(AccessToken, "upn"),
+                    Oid = GetClaimValue(AccessToken, "oid")
+                };
+            }
+            else
+            {
+                subscription = new Subscription
+                {
+                    Event = typeEvent,
+                    CallBackUrl = body.CallBackUrl,
+                    Id = SubId.Value,
+                    Name = "anonymous",
+                    Upn = "none",
+                    Oid = Guid.NewGuid().ToString()
+                };
+            }
             
             // Le stockage des abonnements se fait en mémoire
             // Bien évidement il faudra utiliser un système plus robuste.
