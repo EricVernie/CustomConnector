@@ -238,6 +238,8 @@ La représentation C# est la suivante :
 
 >Note : C'est une représentation trés naive, car les abonnements sont placés en mémoire dans une simple liste. Il faudra sans doute penser à un système plus robuste et autonome, afin de permettre à votre API d'avoir accès aux URL de rappels. Mais cela suffit ici pour nos besoins de démonstrations.
 
+### Création du connecteur personnalisé avec Power Automate 
+
 En l'état, il est possible de commencer à tester la création du connecteur personnalisé,
 Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous pouvez obtenir un essai gratuit en suivant la procèdure [ici](https://docs.microsoft.com/fr-fr/power-automate/sign-up-sign-in)
 
@@ -261,7 +263,7 @@ Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous p
 
     4. [Publiez l'application sur Azure avec Visual Studio 2019](https://docs.microsoft.com/fr-fr/visualstudio/deployment/quickstart-deploy-to-azure?view=vs-2019)
 
-    5. Ajoutez le champ Hôte du style [NOM].azurewebsites.com.
+    5. Ajoutez le champ Hôte du style [NOM DE L'APPLICATION].azurewebsites.com.
 
 7. Allez ensuite dans l'onglet 3. Définition afin de vérifier qu'aucune erreur n'est survenue. Vous noterez à ce stade qu'aucun Déclencheur n'est disponible. Ceci peut-être déroutant, mais ils sont bien présent. Vous pourrez le vérifier en éditant le swagger dans l'interface.
 
@@ -280,21 +282,16 @@ Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous p
 
 14. Selectionnez "lorsqu'un nouveau produit arrive dans le magasin (version d'évaluation)", à ce stade comme aucune information de sécurité n'a été ajouté, le connexion se fait automatiquement.
 
-15. Ajoutez une nouvelle étape de type "Notifications" | "Send me a mobile notification"
+15. Ajoutez une nouvelle étape de type "Notifications" | par exemple "Send me a mobile notification" ou tout autre à votre convenance.
 
 16. Vous pouvez alors remplir, la zone de texte rapidement, en choisissant du contenu dynamique. Vous noterez la correspondance entre les champs du contenu dynamique et la définition/inStore du fichier de définition OpenAPI vu plus haut.
 ![DYNAMIQUE](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/contenudynamique.png)
 
-A ce stade si vous enregistrez le flux, rien ne se passera. et pour cause
-
-
-
-
 ### Securité du connecteur
 
-Il est important que l'utilisateur puisse s'identifier avant de pouvoir utiliser le connecteur. Nous utiliserons dans notre cas Azure Active Directory
+Il est important que l'utilisateur puisse s'identifier avant de pouvoir utiliser le connecteur dans notre contexte, nous utiliserons Azure Active Directory, mais bien évidement c'est ouvert à d'autres fournisseurs d'identité.
 
-## Inscrire une application dans Azure Active Directory
+#### Inscrire une application dans Azure Active Directory
 
 Voici les différentes étapes à suivre :
 
@@ -335,7 +332,7 @@ Voici les différentes étapes à suivre :
     |  Resource Url | copiez ID d'application (client)* |
     |  Etendue  | copiez l'étendue de l'application|
 
-    Une fois le connecteur enregistré, copiez **URL de redirection**, car nous allons finir l'enregistrement de notre application Azure Active Directory.
+    Une fois le connecteur enregistré, copiez **l'URL de redirection**, car nous allons finir l'enregistrement de notre application Azure Active Directory.
 
     >Note : Logic App retourne une URL du style : https://logic-apis-francecentral.consent.azure-apim.net/redirect, Power Automate retourne une URL du style : https://global.consent.azure-apim.net/redirect
 
@@ -345,7 +342,7 @@ Voici les différentes étapes à suivre :
 
     ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/URI.png)
 
-12. Editez le fichier [appsettings.json](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/appsettings.json) et copiez vos informations de l'application Azure Active Directory dans la section **AzureAd**
+12. Editez le fichier [appsettings.json](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/appsettings.json) et copiez vos informations obtenues lors de l'enregsitrement de l'application Azure Active Directory dans la section **AzureAd**.
 
 ```json
  "AzureAd": {
@@ -357,54 +354,9 @@ Voici les différentes étapes à suivre :
   },
 ```
 
-Maintenanons que nous avons mis en place la sécurité de notre connecteur revenons maintenant sur la méthode **AddSubscription**.
-
-Cette méthode nous permet de sauvegarder, non seulement le numéro de l'abonnement du workflow **x-ms-workflow-subscription-id**, mais également le numéro d'identification Azure Active Directory de l'utilisateur connecté.
-Ceci va nous permettre de construire notre url de suppression sous la forme /event/remove/{subscription.Oid}/{subscription.Id}
-
-```CSharp
- private Subscription AddSubscription(Webhook body,TypeEvent typeEvent, IHeaderDictionary headers)
- {
-
-     Subscription subscription = null;
-     // Récupère le numéro d'abonnement du workflow afin de le stocker pour le retrouver
-     // pour suppression.
-     var SubId = headers.Where(x => x.Key == "x-ms-workflow-subscription-id")
-                        .Select(x => x)
-                        .First();
-     // L'entête doit forcement contenir un jeton d'accès sous la forme
-     // Authorization:Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi.....
-     var BearerToken = headers.Where(x => x.Key == "Authorization")
-                    .Select(x => x)
-                    .First();                       
-     string Token = BearerToken.Value;
-
-     // Supprime le mot Bearer + l'espace entre le mot et le jeton
-     Token = Token.Remove(0, 7);
-
-     var Handler = new JwtSecurityTokenHandler();
-     var AccessToken = Handler.ReadJwtToken(Token);
-
-     subscription = new Subscription
-     {
-         Event = typeEvent,
-         CallBackUrl = body.CallBackUrl,
-         Id = SubId.Value,
-         Name = GetClaimValue(AccessToken, "name"),
-         Upn = GetClaimValue(AccessToken, "upn"),
-         Oid = GetClaimValue(AccessToken, "oid")
-     };
-     
-     // Le stockage des abonnements se fait en mémoire
-     // Bien évidement il faudra utiliser un système plus robuste.
-     _subscriptions.Add(subscription);
-     return subscription;
- }
-```
-
 13. [Publiez l'application sur Azure avec Visual Stduio 2019](https://docs.microsoft.com/fr-fr/visualstudio/deployment/quickstart-deploy-to-azure?view=vs-2019)
 
-14. Une fois l'application publiée, vous devez avoir un FQDN du style **[NON DE L'APPLICATION].azurewebsites.net** qu'il faudra renseigner dans la propriété **host** du fichier de définition.
+14. Une fois l'application publiée, vous devez avoir un FQDN du style **[NOM DE L'APPLICATION].azurewebsites.net** qu'il faudra renseigner dans la propriété **host** du fichier de définition.
 
 ```json
 {
@@ -417,6 +369,8 @@ Ceci va nous permettre de construire notre url de suppression sous la forme /eve
   "basePath": "/",
   "schemes": [ "https" ],
 ```
+
+15. [Création du connecteur personnalisé avec Power Automate](#Création_du_connecteur_personnalisé_avec_Power_Automate )
 
 Enfin pour invoquer nos différents workflow un simple POST sur les URL de rappels envoyées par Logic App/Power Automate lorsque l'évènement se produit.
 
