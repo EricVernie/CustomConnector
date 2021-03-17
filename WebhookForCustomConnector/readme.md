@@ -422,7 +422,7 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
 
     ![EXECUTIONFLUX](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/ExecutionFlux.png)
 
-et sur le mobile.
+9. Si vous avez l'application Power Automate sur votre [mobile](https://flow.microsoft.com/en-us/mobile/download/), vous devriez recevoir la notification
 
     ![POWERAUTOMATE](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/PowerAutomate2.jpg)
 
