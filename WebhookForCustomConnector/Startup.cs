@@ -30,6 +30,7 @@ namespace WebhookForCustomConnector
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // 
             services.AddAuthentication(AzureADDefaults.BearerAuthenticationScheme)
                 .AddAzureADBearer(
                 options => Configuration.Bind("AzureAd", options));
@@ -37,8 +38,7 @@ namespace WebhookForCustomConnector
             services.Configure<JwtBearerOptions>(AzureADDefaults.JwtBearerAuthenticationScheme, options =>
             {
                 Configuration.Bind("AzureAd", options);
-                options.TokenValidationParameters.ValidAudiences = new string[] { options.Audience, $"api://{options.Audience}" };
-                
+                options.TokenValidationParameters.ValidAudiences = new string[] { options.Audience, $"api://{options.Audience}" };                
             });
 
             services.AddHttpClient();
