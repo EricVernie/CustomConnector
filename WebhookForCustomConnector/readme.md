@@ -17,7 +17,7 @@ _Chaque connecteur offre un ensemble d’opérations classées comme « Actions 
 |**Déclencheurs** _Polling_| _Ces déclencheurs appellent votre service selon une fréquence spécifiée pour vérifier l’existence de nouvelles données. Lorsque de nouvelles données sont disponibles, cela entraîne une nouvelle exécution de votre instance de workflow avec les données en entrée_|
 |**Déclencheurs** _Webhook| _Ces déclencheurs écoutent les données sur un point de terminaison, c'est-à-dire qu'ils attendent qu'un événement se produise. L'occurrence de cet événement provoque une nouvelle exécution de votre instance de workflow._  |
 
-Mon idée ici est de vous montrer comment préparer les élèments necessaires afin de pouvoir créer un connecteur à base de **déclencheur de type Webhook**. 
+Mon idée ici est de vous montrer comment préparer les éléments nécessaires afin de pouvoir créer un connecteur à base de **déclencheur de type Webhook**. 
 
 Si vous préférez suivre un didacticiel, je vous encourage à suivre celui en ligne [Utiliser un webhook en tant que déclencheur pour Azure Logic Apps et Power Automate](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/create-webhook-trigger)
 
@@ -149,7 +149,7 @@ Pour définir un déclencheur de type webhook, il faut rajouter la propriété *
  |**x-ms-trigger**| Défini une opération déclencheur de type Webhook|
  |**parameters**| Cette propriété est importante car elle définie en entrée **"in":"body"**, c'est à dire dans le corps du message le paramètre nommé arbitrairement **Callback** qui inclura l'url de rappel fournie par Logic App/Power Automate|
 
- Tous le champs définis dans La définition du Webhook sont important et à ne pas ommettre
+ Tous le champs définis dans La définition du Webhook sont important et à ne pas omettre
 
  |Propriété | Définition|
  | :------------- | :---------- |
@@ -166,7 +166,7 @@ public class CallBack
 }
 ```
 
-Et voici la réprésentation C# de l'opération **NewInstoreProduct**
+Et voici la représentation C# de l'opération **NewInstoreProduct**
 
 ```CSharp
 public IActionResult NewInstoreProduct([FromBody] CallBack callback)
@@ -179,9 +179,9 @@ public IActionResult NewInstoreProduct([FromBody] CallBack callback)
 
 >Note: Cette méthode sera appelée par Logic App/Power Automate avec l'url de rappel contenu dans la propriété **CallBack.Url**.
 
-### Supression d'un abonnement
+### Suppression d'un abonnement
 
-Lors de l'inscription de l'abonnement du Workflow Logic App/Power Automate la méthode **NewInstoreProduct** est invoquée, c'est à ce moment là qu'il faut que cette méthode retourne dans l'entête **Location** l'url qu'appelera Logic App/Power Automate, afin que l'abonnement soit supprimé. Cette action se déclenche lorsque le connecteur personnalisé n'est plus utilisé ou que le workflow l'utilisant est supprimé.
+Lors de l'inscription de l'abonnement du Workflow Logic App/Power Automate la méthode **NewInstoreProduct** est invoquée, c'est à ce moment-là qu'il faut que cette méthode retourne dans l'entête **Location** l'url qu'appellera Logic App/Power Automate, afin que l'abonnement soit supprimé. Cette action se déclenche lorsque le connecteur personnalisé n'est plus utilisé ou que le workflow l'utilisant est supprimé.
 
 Afin de retrouver le bon abonnement à supprimer, j'ai décidé de la constituer d'un identificateur **Oid** représentant l'utilisateur authentifié et de l'identificateur **Id** numéro de la souscription renvoyé par Logic App/Power Automate dans l'entête "x-ms-workflow-subscription-id" (Nous y reviendrons un peu plus tard lorsque j'aborderai la sécurité du connecteur)
 
@@ -236,7 +236,7 @@ La représentation C# est la suivante :
 }
 ```
 
->Note : C'est une représentation trés naive, car les abonnements sont placés en mémoire dans une simple liste. Il faudra sans doute penser à un système plus robuste et autonome, afin de permettre à votre API d'avoir accès aux URL de rappels. Mais cela suffit ici pour nos besoins de démonstrations.
+>Note : C'est une représentation très naïve, car les abonnements sont placés en mémoire dans une simple liste. Il faudra sans doute penser à un système plus robuste et autonome, afin de permettre à votre API d'avoir accès aux URL de rappels. Mais cela suffit ici pour nos besoins de démonstrations.
 
 ### Déclencher un workflow
 
@@ -274,17 +274,17 @@ Pour déclencher un workflow, c'est tout compte fait assez simple, il suffira ju
 ### Création du connecteur personnalisé avec Power Automate
 
 En l'état, il est possible de commencer à tester la création du connecteur personnalisé,
-Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous pouvez obtenir un essai gratuit en suivant la procèdure [ici](https://docs.microsoft.com/fr-fr/power-automate/sign-up-sign-in)
+Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous pouvez obtenir un essai gratuit en suivant la procédure [ici](https://docs.microsoft.com/fr-fr/power-automate/sign-up-sign-in)
 
-1. Récupèrez le fichier [définition](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/OpenApiDefinition/OpenApiDefinition.json)
+1. Récupérez le fichier [définition](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/OpenApiDefinition/OpenApiDefinition.json)
 
 2. Connectez-vous au portail https://make.powerapps.com/
 
-3. Dans le panneau gauche, selectionnez "Données" | "Connecteurs Personnalisés"
+3. Dans le panneau gauche, sélectionnez "Données" | "Connecteurs Personnalisés"
 
-4. En haut à droite selectionnez "+ Nouveau connecteur personnalisé" | "Importer un fichier OpenAPI"
+4. En haut à droite sélectionnez "+ Nouveau connecteur personnalisé" | "Importer un fichier OpenAPI"
 
-5. Dans la boîte de dialogue qui apparait, donnez un nom au connecteur puis | Importez le fichier que vous avez récupèrez à l'étape 1
+5. Dans la boîte de dialogue qui apparait, donnez un nom au connecteur puis | Importez le fichier que vous avez récupérez à l'étape 1
 
 6. Vous noterez dans l'onglet "1.Général" que le champ Hôte n'est pas renseigné. Pour cela il vous faut publier le code de cet article. Néanmoins, vous pouvez continuer les étapes suivantes, sans vous en préoccuper outre mesure en indiquant dans le champ hôte toto.contoso.com , par contre à l'enregistrement du flux, rien ne se passera bien évidement. sinon suivez les sous-étapes suivantes : 
 
@@ -298,29 +298,29 @@ Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous p
 
     5. Ajoutez le champ Hôte du style [NOM DE L'APPLICATION].azurewebsites.com.
 
-7. Allez ensuite dans l'onglet 3. Définition afin de vérifier qu'aucune erreur n'est survenue. Vous noterez à ce stade qu'aucun Déclencheur n'est disponible. Ceci peut-être déroutant, mais ils sont bien présent. Vous pourrez le vérifier en éditant le swagger dans l'interface.
+7. Allez ensuite dans l'onglet 3. Définition afin de vérifier qu'aucune erreur n'est survenue. Vous noterez à ce stade qu'aucun Déclencheur n'est disponible. Ceci peut être déroutant, mais ils sont bien présent. Vous pourrez le vérifier en éditant le swagger dans l'interface.
 
-8. Selectionnez "Créer le connecteur". Si tout se passe bien, le connecteur est crée.
+8. Sélectionnez "Créer le connecteur". Si tout se passe bien, le connecteur est créé.
 
-9. Nous allons maintenant créer un Flux en selectionnant dans le panneau Gauche "Flux"
+9. Nous allons maintenant créer un Flux en sélectionnant dans le panneau Gauche "Flux"
 
 10. Puis en haut de l'écran "+ Nouveau Flux" | "Flux de cloud automatisé"
 
-11. Donnnez un nom au flux, puis activez le bouton "Ignorer", afin de créer un flux vierge.
+11. Donnez un nom au flux, puis activez le bouton "Ignorer", afin de créer un flux vierge.
 
-12. Selectionnez l'onglet "Personnalisé" | puis selectionnez le connecteur personnalisé que vous venez de créer
+12. Sélectionnez l'onglet "Personnalisé" | puis sélectionnez le connecteur personnalisé que vous venez de créer
 
 13. Deux déclencheurs devrait apparaitre comme illustré sur la figure suivante :
 ![DECLENCHEUR](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/declencheurs.png)
 
-14. Selectionnez "lorsqu'un nouveau produit arrive dans le magasin (version d'évaluation)", à ce stade comme aucune information de sécurité n'a été ajouté, le connexion se fait automatiquement.
+14. Sélectionnez "lorsqu'un nouveau produit arrive dans le magasin (version d'évaluation)", à ce stade comme aucune information de sécurité n'a été ajouté, le connexion se fait automatiquement.
 
 15. Ajoutez une nouvelle étape de type "Notifications" | par exemple "Send me a mobile notification" ou tout autre à votre convenance.
 
 16. Vous pouvez alors remplir, la zone de texte rapidement, en choisissant du contenu dynamique. Vous noterez la correspondance entre les champs du contenu dynamique et la définition/inStore du fichier de définition OpenAPI vu plus haut.
 ![DYNAMIQUE](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/contenudynamique.png)
 
-### Securité du connecteur
+### Sécurité du connecteur
 
 Il est important que l'utilisateur puisse s'identifier avant de pouvoir utiliser le connecteur dans notre contexte, nous utiliserons Azure Active Directory, mais bien évidement c'est ouvert à d'autres fournisseurs d'identité.
 
@@ -328,19 +328,19 @@ Il est important que l'utilisateur puisse s'identifier avant de pouvoir utiliser
 
 Voici les différentes étapes à suivre :
 
-1. A l'aide du portail https://aad.portal.azure.com/, selectionnez "Azure Active Directory" | Inscription d'applications
+1. A l'aide du portail https://aad.portal.azure.com/, sélectionnez "Azure Active Directory" | Inscription d'applications
 
 2. "+ Nouvelle inscription" | Donnez un Nom | Cochez "Comptes dans un annuaire d'organisation (tout annuaire Azure AD - Multilocataire)
 
 3. Bouton S'inscrire
 
-4. Une fois l'application inscrite, selectionnez "Vue d'ensemble"  et copiez le GUID "ID d'application (client)"
+4. Une fois l'application inscrite, sélectionnez "Vue d'ensemble" et copiez le GUID "ID d'application (client)"
 
-5. Ensuite selectionnez "Certificats & Secrets" | "+ Nouveau secret client" (copiez le secret pour une utilisation future)
+5. Ensuite sélectionnez "Certificats & Secrets" | "+ Nouveau secret client" (copiez le secret pour une utilisation future)
 
-6. Puis selectionnez "API autorisées" | "+ Ajouter une autorisation" | "Microsoft Graph" | "Autorisations déléguées" | cochez "openid et profile"
+6. Puis sélectionnez "API autorisées" | "+ Ajouter une autorisation" | "Microsoft Graph" | "Autorisations déléguées" | cochez "openid et profile"
 
-7. Selectionnez "Exposer une API" | "+ Ajouter une étendue" | Nom de l'étendue: impersonate | Qui peut accepter :" Administrateurs et Utilisateurs" | puis remplissez les autres champs obligatoires
+7. Sélectionnez "Exposer une API" | "+ Ajouter une étendue" | Nom de l’étendue : impersonate | Qui peut accepter :" Administrateurs et Utilisateurs" | puis remplissez les autres champs obligatoires
 
 8. Copiez l'étendue qui doit être de la forme api://[ID de l'application]/impersonate
 
@@ -352,7 +352,7 @@ Voici les différentes étapes à suivre :
 
     - l'étendue de l'application
 
-9. Il nous reste encore un élèment essentiel que nous n'avons pas encore renseigné, mais qui ne peut être que fourni que par l'éditeur de connecteur personnalisé Logic App/Power Automate, lorsqu'on renseigne les différents champs dans l'onglet sécurité c'est **l'url de redirection**.
+9. Il nous reste encore un élément essentiel que nous n'avons pas encore renseigné, mais qui ne peut être que fourni que par l'éditeur de connecteur personnalisé Logic App/Power Automate, lorsqu'on renseigne les différents champs dans l'onglet sécurité c'est **l'url de redirection**.
 Retournez sur le portail power automate et renseignez les champs dans l'onglet 2.Securité comme illustré sur la figure suivante :
 
     ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Securite2.png)
@@ -370,15 +370,15 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
 
     >Note : Logic App retourne une URL du style : https://logic-apis-francecentral.consent.azure-apim.net/redirect, Power Automate retourne une URL du style : https://global.consent.azure-apim.net/redirect
 
-10. Retournez sur le portail Azure Active Directory https://aad.portal.azure.com, selectionnez l'application que vous venez d'inscrire
+10. Retournez sur le portail Azure Active Directory https://aad.portal.azure.com, sélectionnez l'application que vous venez d'inscrire
 
-11. Selectionnez "Authentification" | "+ Ajoutez une plateforme" | Application Web | Web | Copiez l'URI de redirection
+11. Sélectionnez "Authentification" | "+ Ajoutez une plateforme" | Application Web | Web | Copiez l'URI de redirection
 
     ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/URI.png)
 
 ### Test de l'application
 
-1. Editez le fichier [appsettings.json](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/appsettings.json) et copiez vos informations obtenues lors de l'enregsitrement de l'application Azure Active Directory dans la section **AzureAd**.
+1. Editez le fichier [appsettings.json](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/appsettings.json) et copiez vos informations obtenues lors de l'enregistrement de l'application Azure Active Directory dans la section **AzureAd**.
 
 ```json
  "AzureAd": {
@@ -390,7 +390,7 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
   },
 ```
 
-2. [Publiez l'application sur Azure avec Visual Stduio 2019](https://docs.microsoft.com/fr-fr/visualstudio/deployment/quickstart-deploy-to-azure?view=vs-2019)
+2. [Publiez l'application sur Azure avec Visual Studio 2019](https://docs.microsoft.com/fr-fr/visualstudio/deployment/quickstart-deploy-to-azure?view=vs-2019)
 
 3. Une fois l'application publiée, vous devez avoir un FQDN du style **[NOM DE L'APPLICATION].azurewebsites.net** qu'il faudra renseigner dans la propriété **host** du fichier de définition ou dans le champ Hôte de l'onglet 1.Général, lors de la création du connecteur
 
@@ -410,11 +410,11 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
 
     ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/SecuriteFlux.png)
 
-5. Une fois le flux crée, selectionnez en haut à droit "Test" | "Manuellement" | "Enregistrer et tester"
+5. Une fois le flux crée, sélectionnez en haut à droit "Test" | "Manuellement" | "Enregistrer et tester"
 
 6. Ensuite allez dans un navigateur, puis entrez l'url https://[NOM DE L'APPLICATION].azurewebsites.net/swagger
 
-7. Selectionnez la méthode POST /fire/instore comme illustré sur la figure suivante : 
+7. Sélectionnez la méthode POST /fire/instore comme illustré sur la figure suivante : 
 
     ![SWAGGER](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/swagger.png)
 
@@ -427,8 +427,11 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
     ![POWERAUTOMATE](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/PowerAutomate2.jpg)
 
 
-Les connecteurs personnalisés à base de déclencheurs, vont vous permettre de dévérouiller des scénarios, sans pour autant lourdement investir dans le développement de solutions personnalisées.
-De s'intégrer facilement et rapidement aux systèmes d'informations de vos clients et de leur permettre de construire leur propre solution de workflow.
+### Conclusion
 
+Les connecteurs personnalisés à base de déclencheurs, vont vous permettre de déverrouiller des scénarios, sans que vous soyez obligé d'investir lourdement dans le développement de solutions personnalisées.
 
-Il y a un peu de boulot puisque vous devez ....
+Il y a quand même un peu de boulot et de code à écrire afin de créer le WebHook pour la gestion des abonnements, ainsi que d'intégrer vos évènements pour qu'il puissent déclencher les workflows. Mais franchement rien en comparaison, si vous aviez à développer une solution personnalisée pour tous types de fournisseurs.
+
+Appuyez-vous sur [l'écosystème des connecteurs personnalisés](https://docs.microsoft.com/en-us/connectors/connector-reference/) de Logic App/Power Automate, pour fournir à vos clients des solutions clés en main adaptées à leurs besoins.
+
