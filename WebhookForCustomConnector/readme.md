@@ -271,7 +271,6 @@ Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous p
 14. Ajoutez une nouvelle étape de type "Notifications" | "Send me a mobile notification"
 
 15. Vous pouvez alors remplir, la zone de texte rapidement, en choisissant du contenu dynamique
-
 ![DYNAMIQUE](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/contenudynamique.png)
 
 , puis en suivant les instructions [ici](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/define-openapi-definition)
