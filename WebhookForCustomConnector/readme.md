@@ -378,7 +378,7 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
 
 ### Test de l'application
 
-1.Editez le fichier [appsettings.json](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/appsettings.json) et copiez vos informations obtenues lors de l'enregsitrement de l'application Azure Active Directory dans la section **AzureAd**.
+1. Editez le fichier [appsettings.json](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/appsettings.json) et copiez vos informations obtenues lors de l'enregsitrement de l'application Azure Active Directory dans la section **AzureAd**.
 
 ```json
  "AzureAd": {
@@ -408,7 +408,7 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
 
 4. Créez un nouveau flux sur le portail power automate en prenant soin de supprimer toutes références aux connexions du connecteur personnalisé. Si tout fonctionne correctement vous devriez voir apparaître le bouton "Se connecter" comme illustrer sur la figure suivante.
 
-  ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/SecuriteFlux.png)
+    ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/SecuriteFlux.png)
 
 5. Une fois le flux crée, selectionnez en haut à droit "Test" | "Manuellement" | "Enregistrer et tester"
 
@@ -416,12 +416,14 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
 
 7. Selectionnez la méthode POST /fire/instore comme illustré sur la figure suivante : 
 
-  ![SWAGGER](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/swagger.png)
+    ![SWAGGER](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/swagger.png)
 
-8. Si tout a fonctionné.
+8. Et si tout a fonctionné, comme illustré sur la figure suivante.
 
-  ![EXECUTIONFLUX](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/ExecutionFlux.png)
+    ![EXECUTIONFLUX](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/ExecutionFlux.png)
 
+et sur le mobile.
+    ![POWERAUTOMATE](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/PowerAutomate.jpg)
 
 
 Les connecteurs personnalisés à base de déclencheurs, vont vous permettre de dévérouiller des scénarios, sans pour autant lourdement investir dans le développement de solutions personnalisées.
