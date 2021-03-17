@@ -5,7 +5,11 @@ Cet article assume que vous connaissiez déjà les basiques de la création d'un
 
 Je ne vais donc pas y revenir, mais si tel n'est pas le cas, je vous laisse le soin d’aller voir la [documentation en ligne](https://docs.microsoft.com/fr-fr/connectors/connectors).
 
-Néanmoins, pour résumé, un connecteur peut-être de type :
+Néanmoins, pour résumé rapidement un connecteur
+
+_C'est un proxy ou un wrapper autour d’une API qui permet au service sous-jacent de communiquer avec Microsoft Power Automate, Microsoft Power Apps et Azure Logic Apps. Il offre aux utilisateurs un moyen de se connecter à leurs comptes et de tirer parti d’un ensemble d’actions et de déclencheurs prédéfinis pour créer leurs applications et leurs workflows._
+
+_Chaque connecteur offre un ensemble d’opérations classées comme « Actions » et « Déclencheurs ». Une fois que vous vous êtes connecté au service sous-jacent, ces opérations peuvent être facilement exploitées dans vos applications et vos workflows._
 
 **Action**
 
@@ -19,7 +23,9 @@ _Ces déclencheurs appellent votre service selon une fréquence spécifiée pour
 *Webhook* :
 _Ces déclencheurs écoutent les données sur un point de terminaison, c'est-à-dire qu'ils attendent qu'un événement se produise. L'occurrence de cet événement provoque une nouvelle exécution de votre instance de workflow._
 
-Mon idée ici est de vous montrer comment préparer les élèments necessaires afin de pouvoir créer un connecteur à base de **déclencheur de type Webhook**
+Mon idée ici est de vous montrer comment préparer les élèments necessaires afin de pouvoir créer un connecteur à base de **déclencheur de type Webhook**. 
+
+Si vous préférez suivre un didacticiel, je vous encourage à suivre celui en ligne [Utiliser un webhook en tant que déclencheur pour Azure Logic Apps et Power Automate](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/create-webhook-trigger)
 
 ## Pourquoi développer un connecteur personnalisé ?
 
@@ -39,12 +45,11 @@ Les avantages sont nombreux, du fait même qu’ils existent de nombreux autres 
 [Logic App](https://docs.microsoft.com/fr-fr/azure/connectors/apis-list#:~:text=Connectors%20provide%20quick%20access%20from%20Azure%20Logic%20Apps,the%20data%20that%20you%20create%20and%20already%20have.)
  et [Power Automate](https://emea.flow.microsoft.com/fr-fr/connectors/)
 
-- Ils vous permettront de vous intégrer à moindre frais et facilement à la plate-forme Microsoft 365, à des systèmes tiers Dynamics, Sales Force, à de l’intelligence artificielle etc…, et ceci que cela soit dans le cloud ou on-premise.
+- Ils vous permettront de vous intégrer à moindre frais et facilement à la plate-forme Office 365, Azure, Dynamics 365, et autres SalesForce, Twitter, etc.. [connecteurs](https://emea.flow.microsoft.com/fr-fr/connectors/?filter=&category=all), et ceci que cela soit dans le cloud ou on-premise.
 
 - Pas besoin de développer une solution d’intégration pour chaque système, les connecteurs disponibles sont fait pour ça.
 
 - Vous permettez à vos clients non-développeurs de créer facilement leurs propres workflows d’intégration à l’aide de Power Automate.
-
 
 ## Logique d'un déclencheur dans Logic App et Power Automate
 
