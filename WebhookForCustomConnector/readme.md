@@ -264,7 +264,7 @@ Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous p
 11. Selectionnez l'onglet "Personnalisé" | puis selectionnez le connecteur personnalisé que vous venez de créer
 
 12. Deux déclencheurs devrait apparaitre comme illustré sur la figure suivante :
-![DECLENCHEUR](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/declencheur.png)
+![DECLENCHEUR](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/declencheurs.png)
 
 , puis en suivant les instructions [ici](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/define-openapi-definition)
 
