@@ -437,11 +437,11 @@ Appuyez-vous sur [l'écosystème des connecteurs personnalisés](https://docs.mi
 
 ### Bonus
 
-Si vous avez installé l'application sur Azure, il est possible de s'abonner aux logs du Web Hook afin de pister les erreurs.
+Si vous avez installé l'application sur Azure, il est possible de s'abonner aux logs du Web Hook afin de pister les erreurs et les logs.
 
 Pour ce faire vous pouvez utiliser l'utilitaire [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
-ensuite la commande az webapp log tail --name [NOM APPLICATION] -g [NOM DU RESSOURCE GROUPE] va vous permettre de vous connecter au log-streaming à partir de votre poste de travail
+Ensuite la commande **_az webapp log tail --name [NOM APPLICATION] -g [NOM DU RESSOURCE GROUPE]_** va vous permettre de vous connecter au flux de logs à partir de votre poste de travail.
 
 ![LOGS](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/logs.png)
 

@@ -77,8 +77,11 @@ namespace WebhookForCustomConnector.Controllers
         public IActionResult RemoveSubscription(string oid, string id)
         {
             var itemToRemove = _subscriptions.Single(r => r.Id == id && r.Oid == oid);
-            _logger.LogInformation($"Suppression de l'abonnement : {id}, pour l'utilisateur '{itemToRemove.Name}'");
-            _subscriptions.Remove(itemToRemove);
+            if (itemToRemove !=null)
+            {
+                _logger.LogInformation($"Suppression de l'abonnement : {id}, pour l'utilisateur '{itemToRemove.Name}'");
+                _subscriptions.Remove(itemToRemove);
+            }            
             return Ok();
         }
         #endregion
@@ -170,7 +173,6 @@ namespace WebhookForCustomConnector.Controllers
                 catch (Exception ex)
                 {
                     _logger.LogError(ex.Message);
-
                 }
             }
             return Accepted($"Il y a {inStoreSubscriptions.Count} abonnement(s) au connecteur");
