@@ -184,7 +184,7 @@ namespace WebHookForCustomConnector.Controllers
         /// <returns></returns>
         [HttpPost, Route("/fire/neworder")]        
         [AllowAnonymous]
-        public async Task<IActionResult> FireNewOrder([FromBody] Order newOrder)
+        public async Task<IActionResult> FireNewOrder([FromBody]Order newOrder)
         {
             // Sauvegarde la nouvelle commande
             _newOrders.Orders.Add(newOrder);

@@ -86,7 +86,10 @@ Pour définir un déclencheur de type webhook, il faut rajouter la propriété *
 ```json
 "/event/instore": {
       "x-ms-notification-content": {
-        "description": "Arrivée de nouveaux produits"
+        "description": "Arrivée de nouveaux produits",
+        "schema": {
+          "$ref": "#/definitions/InStore"
+        }
       },
       "post": {
         "description": "Lorsque qu'un nouveau produit arrive dans le magasin (version d'évaluation)",
@@ -109,13 +112,9 @@ Pour définir un déclencheur de type webhook, il faut rajouter la propriété *
         }
       }
     },
-
-```
-
-Outre les propriétés description et summary, la propriété **"operationId":"NewInstoreProduct"** qui définie le nom du déclencheur, la propriété **parameters** est trés importante, car elle définie en entrée **"in":"body"**, c'est à dire dans le corps du message le paramètre nommé arbitrairement **Webhook** qui inclura l'url de rappel fournie par Logic App/Power Automate, dont voici sa représentation.
-
-```json
-"Webhook": {
+....
+ "definitions": {
+    "Webhook": {
       "type": "object",
       "required": [ "callBackUrl" ],
       "properties": {
@@ -128,14 +127,41 @@ Outre les propriétés description et summary, la propriété **"operationId":"N
           "type": "string"
         }
       }
-    }
+    },
+    "InStore": {
+      "type": "object",
+      "properties": {
+        "storeName": {
+          "type": "string"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "quantity": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    ...
+
 ```
 
-**"required":["callBackUrl"]** indique que le champ callBackUrl est requis.
+ |Propriété | Définition|
+ | :------------- | :---------- |
+ |**x-ms-notification-content**| Schéma de la charge utile qui sera envoyé à Logic App/Power Automate, lors du déclenchement de l'événement. En d'autres termes lorsqu'un nouveau produit arrive en magasin, c'est le schéma contenant les informations sur le produit qui sera envoyé à l'url de notification, afin de déclencher le Workflow. Par exemple si votre système reçois {storeName": "Magasin 1,"productName": "RTX 3090","quantity": 500}, vous le sauvegarderez, non seulement dans votre système, mais vous le fournirez également dans le corps du message lors de l'appel à l'url de rappel du workflow|
+ |description & summary| Chaines de caractères affichées dans l'interface de l'éditeur de Workflow [Conseils sur les chaînes de connecteur](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/connector-string-guidance)|
+ |operationId| Id de l'opération|
+ |**x-ms-trigger**| Défini une opération déclencheur de type Webhook|
+ |**parameters**| Cette propriété est importante car elle définie en entrée **"in":"body"**, c'est à dire dans le corps du message le paramètre nommé arbitrairement **Webhook** qui inclura l'url de rappel fournie par Logic App/Power Automate|
 
-**"x-ms-notification-url":"true"** va indiquer à Logic App/Power Automate de placer l'URL de rappel dans le champ callBackUrl.
+ Tous le champs définis dans La définition du Webhook sont important et à ne pas ommettre
 
-**"x-ms-visibility":"internal"** indique que le champ doit être masqué aux utilisateurs.
+ |Propriété | Définition|
+ | :------------- | :---------- |
+ |**"required":["callBackUrl"]** | Indique que le champ callBackUrl est requis. |
+ |**"x-ms-notification-url":"true"**| Indique à Logic App/Power Automate de placer l'URL de rappel dans le champ **callBackUrl**.|
+ |**"x-ms-visibility":"internal"**|Indique que le champ doit être masqué aux utilisateurs.|
 
 Voici sa représentation en C#, ce n'est ni plus ni moins qu'une classe avec une propriété de type string
 

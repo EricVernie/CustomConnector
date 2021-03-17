@@ -20,7 +20,10 @@
   "paths": {
     "/event/neworder": {
       "x-ms-notification-content": {
-        "description": "Création d'une nouvelle commande"
+        "description": "Création d'une nouvelle commande",
+        "schema": {
+          "$ref": "#/definitions/Order"
+        }
       },
       "post": {
         "description": "Lorsqu'une nouvelle commande est créée (version d'évaluation)",
@@ -46,7 +49,10 @@
     },
     "/event/instore": {
       "x-ms-notification-content": {
-        "description": "Arrivée de nouveaux produits"
+        "description": "Arrivée de nouveaux produits",
+        "schema": {
+          "$ref": "#/definitions/InStore"
+        }
       },
       "post": {
         "description": "Lorsque qu'un nouveau produit arrive dans le magasin (version d'évaluation)",
@@ -113,7 +119,7 @@
       }
     }
   },
-  "definitions": {   
+  "definitions": {
     "Webhook": {
       "type": "object",
       "required": [ "callBackUrl" ],
@@ -125,6 +131,21 @@
           "description": "URL de rappel",
           "title": "URL de rappel",
           "type": "string"
+        }
+      }
+    },
+    "InStore": {
+      "type": "object",
+      "properties": {
+        "storeName": {
+          "type": "string"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "quantity": {
+          "format": "int32",
+          "type": "integer"
         }
       }
     },
@@ -141,7 +162,7 @@
     },
     "Order": {
       "type": "object",
-      "properties": {
+      "properties": {        
         "customerName": {
           "type": "string"
         },
