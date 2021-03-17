@@ -431,7 +431,7 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
 
 Les connecteurs personnalisés à base de déclencheurs, vont vous permettre de déverrouiller des scénarios, sans que vous soyez obligé d'investir lourdement dans le développement de solutions personnalisées.
 
-Il y a quand même un peu de boulot et de code à écrire afin de créer le WebHook pour la gestion des abonnements, ainsi que d'intégrer vos évènements pour qu'il puissent déclencher les workflows. Mais franchement rien en comparaison, si vous aviez à développer une solution personnalisée pour tous types de fournisseurs.
+Il y a quand même un peu de boulot et de code à écrire afin de créer le WebHook pour la gestion des abonnements, ainsi que d'intégrer vos évènements pour qu'il puissent déclencher les workflows. Mais franchement rien en comparaison si vous aviez à développer une solution personnalisée pour tous types de fournisseurs.
 
 Appuyez-vous sur [l'écosystème des connecteurs personnalisés](https://docs.microsoft.com/en-us/connectors/connector-reference/) de Logic App/Power Automate, pour fournir à vos clients des solutions clés en main adaptées à leurs besoins.
 
