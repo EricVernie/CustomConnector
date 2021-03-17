@@ -238,7 +238,7 @@ La représentation C# est la suivante :
 
 >Note : C'est une représentation trés naive, car les abonnements sont placés en mémoire dans une simple liste. Il faudra sans doute penser à un système plus robuste et autonome, afin de permettre à votre API d'avoir accès aux URL de rappels. Mais cela suffit ici pour nos besoins de démonstrations.
 
-### Création du connecteur personnalisé avec Power Automate 
+### Création du connecteur personnalisé avec Power Automate
 
 En l'état, il est possible de commencer à tester la création du connecteur personnalisé,
 Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous pouvez obtenir un essai gratuit en suivant la procèdure [ici](https://docs.microsoft.com/fr-fr/power-automate/sign-up-sign-in)
@@ -319,7 +319,8 @@ Voici les différentes étapes à suivre :
 
     - l'étendue de l'application
 
-9. Il nous reste encore un élèment essentiel que nous n'avons pas encore renseigné, mais qui ne peut être que fourni que par l'éditeur de connecteur personnalisé Logic App/Power Automate, lorsqu'on renseigne les différents champs dans l'onglet sécurité c'est **l'url de redirection**. Comme illustré sur la figure suivante :
+9. Il nous reste encore un élèment essentiel que nous n'avons pas encore renseigné, mais qui ne peut être que fourni que par l'éditeur de connecteur personnalisé Logic App/Power Automate, lorsqu'on renseigne les différents champs dans l'onglet sécurité c'est **l'url de redirection**.
+Retournez sur le portail power automate et renseignez les champs dans l'onglet 2.Securité comme illustré sur la figure suivante :
 
     ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Securite2.png)
 
@@ -342,8 +343,9 @@ Voici les différentes étapes à suivre :
 
     ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/URI.png)
 
-12. Editez le fichier [appsettings.json](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/appsettings.json) et copiez vos informations obtenues lors de l'enregsitrement de l'application Azure Active Directory dans la section **AzureAd**.
+### Test de l'application
 
+1. Editez le fichier [appsettings.json](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/appsettings.json) et copiez vos informations obtenues lors de l'enregsitrement de l'application Azure Active Directory dans la section **AzureAd**.
 ```json
  "AzureAd": {
     "Instance": "https://login.microsoftonline.com/",
@@ -354,9 +356,9 @@ Voici les différentes étapes à suivre :
   },
 ```
 
-13. [Publiez l'application sur Azure avec Visual Stduio 2019](https://docs.microsoft.com/fr-fr/visualstudio/deployment/quickstart-deploy-to-azure?view=vs-2019)
+2. [Publiez l'application sur Azure avec Visual Stduio 2019](https://docs.microsoft.com/fr-fr/visualstudio/deployment/quickstart-deploy-to-azure?view=vs-2019)
 
-14. Une fois l'application publiée, vous devez avoir un FQDN du style **[NOM DE L'APPLICATION].azurewebsites.net** qu'il faudra renseigner dans la propriété **host** du fichier de définition.
+3. Une fois l'application publiée, vous devez avoir un FQDN du style **[NOM DE L'APPLICATION].azurewebsites.net** qu'il faudra renseigner dans la propriété **host** du fichier de définition ou dans le champ Hôte de l'onglet 1.Général, lors de la création du connecteur
 
 ```json
 {
@@ -370,7 +372,10 @@ Voici les différentes étapes à suivre :
   "schemes": [ "https" ],
 ```
 
-15. [Création du connecteur personnalisé avec Power Automate](#Création_du_connecteur_personnalisé_avec_Power_Automate )
+4. Créez un nouveau flux sur le portail power automate en prenant soin de supprimer toutes références aux connexions du connecteur personnalisé crée plus haut.
+![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/SecuriteFlux.png)
+
+
 
 Enfin pour invoquer nos différents workflow un simple POST sur les URL de rappels envoyées par Logic App/Power Automate lorsque l'évènement se produit.
 
