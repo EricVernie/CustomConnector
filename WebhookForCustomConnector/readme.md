@@ -406,11 +406,11 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
   "schemes": [ "https" ],
 ```
 
-4. Créez un nouveau flux sur le portail power automate en prenant soin de supprimer toutes références aux connexions du connecteur personnalisé crée plus haut. Si tout fonctionne correctement vous devriez voir apparaître le bouton "Se connecter" comme illustrer sur la figure suivante.
+4. Créez un nouveau flux sur le portail power automate en prenant soin de supprimer toutes références aux connexions du connecteur personnalisé. Si tout fonctionne correctement vous devriez voir apparaître le bouton "Se connecter" comme illustrer sur la figure suivante.
 
 ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/SecuriteFlux.png)
 
-5. Une fois le flux crée, selectionnez en haut à droit "Test" | "Manuellement | "Enregistrer et tester"
+5. Une fois le flux crée, selectionnez en haut à droit "Test" | "Manuellement" | "Enregistrer et tester"
 
 6. Ensuite allez dans un navigateur, puis entrez l'url https://[NOM DE L'APPLICATION].azurewebsites.net/swagger
 
@@ -418,7 +418,8 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
 ![SWAGGER](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/swagger.png)
 
 8. Si tout a fonctionné.
-![EXECUTIONFLUX](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/SecuriteFlux.png)
+
+![EXECUTIONFLUX](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/ExecutionFlux.png)
 
 
 
