@@ -249,31 +249,43 @@ Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous p
 
 4. En haut à droite selectionnez "+ Nouveau connecteur personnalisé" | "Importer un fichier OpenAPI"
 
-5. Dans la boîte de dialogue qui apparait, donnez un nom au connecteur puis | Importer le fichier que vous avez récupèrer à l'étape 1
+5. Dans la boîte de dialogue qui apparait, donnez un nom au connecteur puis | Importez le fichier que vous avez récupèrez à l'étape 1
 
-6. Allez ensuite dans l'onglet 3. Définition afin de vérifier qu'aucune erreur n'est survenue. Vous noterez à ce stade qu'aucun Déclencheur n'est disponible. Ceci peut-être déroutant, mais ils sont bien présent. Vous pourrez le vérifier en éditant le swagger dans l'interface.
+6. Vous noterez dans l'onglet "1.Général" que le champ Hôte n'est pas renseigné. Pour cela il vous faut publier le code de cet article. Néanmoins, vous pouvez continuer les étapes suivantes, sans vous en préoccuper outre mesure en indiquant dans le champ hôte toto.contoso.com , par contre à l'enregistrement du flux, rien ne se passera bien évidement. sinon suivez les sous-étapes suivantes : 
 
-7. Selectionnez "Créer le connecteur". Si tout se passe bien, le connecteur est crée.
+    1. [Abonnement Azure Gratuit](https://azure.microsoft.com/fr-fr/free/)
 
-8. Nous allons maintenant créer un Flux en selectionnant dans le panneau Gauche "Flux"
+    2. [Téléchargement gratuit de visual Studio](https://visualstudio.microsoft.com/fr/vs/)
 
-9. Puis en haut de l'écran "+ Nouveau Flux" | "Flux de cloud automatisé"
+    3. Cloner le code
 
-10. Donnnez un nom au flux, puis activez le bouton "Ignorer", afin de créer un flux vierge.
+    4. [Publiez l'application sur Azure avec Visual Studio 2019](https://docs.microsoft.com/fr-fr/visualstudio/deployment/quickstart-deploy-to-azure?view=vs-2019)
 
-11. Selectionnez l'onglet "Personnalisé" | puis selectionnez le connecteur personnalisé que vous venez de créer
+    5. Ajoutez le champ Hôte du style [NOM].azurewebsites.com.
 
-12. Deux déclencheurs devrait apparaitre comme illustré sur la figure suivante :
+7. Allez ensuite dans l'onglet 3. Définition afin de vérifier qu'aucune erreur n'est survenue. Vous noterez à ce stade qu'aucun Déclencheur n'est disponible. Ceci peut-être déroutant, mais ils sont bien présent. Vous pourrez le vérifier en éditant le swagger dans l'interface.
+
+8. Selectionnez "Créer le connecteur". Si tout se passe bien, le connecteur est crée.
+
+9. Nous allons maintenant créer un Flux en selectionnant dans le panneau Gauche "Flux"
+
+10. Puis en haut de l'écran "+ Nouveau Flux" | "Flux de cloud automatisé"
+
+11. Donnnez un nom au flux, puis activez le bouton "Ignorer", afin de créer un flux vierge.
+
+12. Selectionnez l'onglet "Personnalisé" | puis selectionnez le connecteur personnalisé que vous venez de créer
+
+13. Deux déclencheurs devrait apparaitre comme illustré sur la figure suivante :
 ![DECLENCHEUR](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/declencheurs.png)
 
-13. Selectionnez le 1er, à ce stade comme aucune information de sécurité n'a été ajouté, le connexion se fait automatiquement.
+14. Selectionnez "lorsqu'un nouveau produit arrive dans le magasin (version d'évaluation)", à ce stade comme aucune information de sécurité n'a été ajouté, le connexion se fait automatiquement.
 
-14. Ajoutez une nouvelle étape de type "Notifications" | "Send me a mobile notification"
+15. Ajoutez une nouvelle étape de type "Notifications" | "Send me a mobile notification"
 
-15. Vous pouvez alors remplir, la zone de texte rapidement, en choisissant du contenu dynamique
+16. Vous pouvez alors remplir, la zone de texte rapidement, en choisissant du contenu dynamique. Vous noterez la correspondance entre les champs du contenu dynamique et la définition/inStore du fichier de définition OpenAPI vu plus haut.
 ![DYNAMIQUE](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/contenudynamique.png)
 
-, puis en suivant les instructions [ici](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/define-openapi-definition)
+A ce stade si vous enregistrez le flux, rien ne se passera. et pour cause
 
 
 
