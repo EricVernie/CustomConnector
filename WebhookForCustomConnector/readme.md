@@ -415,6 +415,7 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
 6. Ensuite allez dans un navigateur, puis entrez l'url https://[NOM DE L'APPLICATION].azurewebsites.net/swagger
 
 7. Selectionnez la méthode POST /fire/instore comme illustré sur la figure suivante : 
+
 ![SWAGGER](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/swagger.png)
 
 8. Si tout a fonctionné.
