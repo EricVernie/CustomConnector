@@ -45,7 +45,7 @@ Les avantages sont nombreux du fait même qu’ils existent de nombreux autres c
 [Logic App](https://docs.microsoft.com/fr-fr/azure/connectors/apis-list#:~:text=Connectors%20provide%20quick%20access%20from%20Azure%20Logic%20Apps,the%20data%20that%20you%20create%20and%20already%20have.)
  et [Power Automate](https://emea.flow.microsoft.com/fr-fr/connectors/)
 
-- Ils vous permettront de vous intégrer à moindre frais et facilement à la plate-forme Office 365, Azure, Dynamics 365, et autres SalesForce, Twitter, etc.. [Liste des connecteurs](https://emea.flow.microsoft.com/fr-fr/connectors/?filter=&category=all), et ceci que le système d'informations de vos clients soient dans le cloud ou à demeure.
+- Ils vous permettront de vous intégrer à moindre frais et facilement à la plate-forme Office 365, Azure, Dynamics 365, et autres SalesForce, Twitter, etc.. [Liste des connecteurs](https://emea.flow.microsoft.com/fr-fr/connectors/?filter=&category=all), et ceci que les systèmes d'informations de vos clients soient dans le cloud ou à demeure.
 
 - Pas besoin de développer une solution d’intégration pour chaque système, les connecteurs disponibles sont fait pour ça.
 
