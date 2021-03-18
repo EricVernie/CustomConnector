@@ -309,7 +309,7 @@ Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous p
 
 5. Dans la boîte de dialogue qui apparait, donnez un nom au connecteur puis, importez le fichier que vous venez de récupérer.
 
-6. Vous noterez dans l'onglet "1.Général" que le champ Hôte n'est pas renseigné. Pour cela il vous faut publier le code de cet article. Néanmoins, vous pouvez continuer les étapes suivantes, sans vous en préoccuper outre mesure, en indiquant dans le champ hôte un FQDN factice, style toto.contoso.com, par contre à l'enregistrement du flux, rien ne se passera bien évidement. Sinon suivez les sous-étapes suivantes :
+6. Vous noterez dans l'onglet "1.Général" que le champ Hôte n'est pas renseigné. Pour cela il vous faut publier le code de cet article. Néanmoins, vous pouvez continuer les étapes suivantes, sans vous en préoccuper outre mesure, en indiquant dans le champ hôte un FQDN factice, style _toto.contoso.com_, par contre à l'enregistrement du flux, rien ne se passera bien évidement. Sinon suivez les sous-étapes suivantes :
 
     1. [Abonnement Azure Gratuit](https://azure.microsoft.com/fr-fr/free/).
 
