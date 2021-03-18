@@ -82,7 +82,7 @@ Dans les lignes qui suivent nous allons donc voir comment :
 Pour définir ce type de déclencheur, il faut rajouter la propriété **"x-ms-trigger": "single"** dans la définition OpenAPI, afin d'afficher l'opération en tant que déclencheur dans l'éditeur de connecteur personnalisé, comme illustré sur la figure suivante :
 >Note : Ne pas mettre la propriété **"x-ms-trigger"** défini l'opération comme étant une **Action**.
 
-![DEFINITION](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Definition.png)
+![DEFINITION](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Definition2.png)
 
 _Extrait d'une définition au format OpenAPI d'une opération de type déclencheur_
 
