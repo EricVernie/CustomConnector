@@ -461,7 +461,7 @@ Retournez sur le portail Power Automate et renseignez les champs dans l'onglet "
 
 10. Ou alors dans votre messagerie la notification.
 
-    ![NOTIFEMAIL](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/NotificationEmail.jpg)
+    ![NOTIFEMAIL](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/NotificationEmail.png)
 
 
 ### Conclusion
