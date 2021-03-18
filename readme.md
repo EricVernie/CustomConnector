@@ -190,11 +190,11 @@ Lors de l'inscription de l'abonnement du Workflow, la méthode **NewInstoreProdu
 
 >Note: Le champ d'entête **Location** n'a de sens que si la méthode retourne une réponse d'état 201 (crée).
 
-Afin de retrouver le bon abonnement à supprimer, l'Url de suppression sera constituée d'un identificateur **oid** représentant l'utilisateur authentifié et de l'identificateur **Id** numéro de la souscription renvoyé par Logic App/Power Automate dans le champ l'entête "x-ms-workflow-subscription-id".
+Afin de retrouver l'abonnement à supprimer, l'Url de suppression sera constituée d'un identificateur **oid** représentant l'utilisateur authentifié et de l'identificateur **Id** représentant le numéro de la souscription renvoyé par Logic App/Power Automate dans le champ d'entête "x-ms-workflow-subscription-id".
 
-Le format de cette url sera donc "/event/remove/{oid}/{Id}/". Bien évidement ce n'est pas figé et dépendra sans doute de votre propre logique.
+Le format de cette Url sera donc "/event/remove/{oid}/{Id}/". Bien évidement ce n'est pas figé et dépendra sans doute de votre propre logique.
 
-La définition OpenAPI pour la suppression de l'abonnement, doit donc reprendre le format de cette url, comme illustré dans l'extrait suivant.
+La définition OpenAPI pour la suppression de l'abonnement, doit donc reprendre le format de cette Url, comme illustré dans l'extrait suivant.
 
 ```json
  "/event/remove/{oid}/{id}": {
@@ -228,10 +228,10 @@ La définition OpenAPI pour la suppression de l'abonnement, doit donc reprendre 
 ...
 ```
 
-Les deux paramètres **oid** et **id** sont requis et doivent être placés dans l'url elle même **"in":"path"**.
-Comme c'est une opération de type Action, nous ne souhaitons pas qu'elle soit visible dans l'éditeur de workflow pour les utilisateurs **"x-ms-visibility":"internal"**
+Les deux paramètres **oid** et **id** sont requis et doivent être placés dans l'Url elle même **"in":"path"**.
+Comme c'est une opération de type Action, nous ne souhaitons pas qu'elle soit visible dans l'éditeur de workflow **"x-ms-visibility":"internal"**
 
-La représentation C# est la suivante :
+Sa représentation C# est la suivante :
 
 ```CSharp
 [HttpDelete, Route("/event/remove/{oid}/{id}")]
@@ -252,11 +252,11 @@ public IActionResult RemoveSubscription(string oid, string id)
 }
 ```
 
->Note : C'est une représentation très naïve, car les abonnements sont placés en mémoire dans une simple liste. Il faudra sans doute penser à un système plus robuste et autonome, mais cela suffit ici pour nos besoins de démonstrations.
+>Note : C'est un code très naïf, car les abonnements sont placés en mémoire dans une simple liste. Il faudra sans doute penser à un système plus robuste et autonome, avec vrai référentiel. Mais cela suffit ici pour nos besoins de démonstration.
 
 ### Déclencher un workflow
 
-Pour déclencher un workflow, c'est tout compte fait assez simple, il suffira juste d'un POST sur l'Url de rappel, en n'oubliant pas de passer le contenu du corps du message, comme illustré dans le code c# suivant.
+Pour déclencher un workflow, c'est tout compte fait assez simple, il suffira juste d'exécuter une requête Post sur l'Url de rappel, en n'oubliant pas delui passer le contenu du corps du message, comme illustré dans le code c# suivant.
 
 ```CSharp
  [HttpPost, Route("/fire/instore")]
@@ -299,6 +299,7 @@ En l'état, il est possible de commencer à tester la création du connecteur pe
 Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous pouvez obtenir un essai gratuit en suivant la procédure [ici](https://docs.microsoft.com/fr-fr/power-automate/sign-up-sign-in)
 
 1. Récupérez le fichier [définition](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/OpenApiDefinition/OpenApiDefinition.json).
+>Note : Ce fichier est également compatible avec un connecteur personnalisé Azure Logic App
 
 2. Connectez-vous au portail https://make.powerapps.com/.
 
