@@ -315,7 +315,7 @@ Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous p
 
     2. [Téléchargement gratuit de visual Studio](https://visualstudio.microsoft.com/fr/vs/).
 
-    3. Cloner le code.
+    3. Cloner le code. git clone https://github.com/EricVernie/CustomConnector.git
 
     4. [Publiez l'application sur Azure avec Visual Studio 2019](https://docs.microsoft.com/fr-fr/visualstudio/deployment/quickstart-deploy-to-azure?view=vs-2019).
 
