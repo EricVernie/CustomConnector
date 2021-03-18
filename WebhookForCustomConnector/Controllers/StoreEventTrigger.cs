@@ -76,6 +76,12 @@ namespace WebhookForCustomConnector.Controllers
         [HttpDelete, Route("/event/remove/{oid}/{id}")]
         public IActionResult RemoveSubscription(string oid, string id)
         {
+            if (_subscriptions.Count == 0)
+            {
+                _logger.LogInformation("Aucun d'abonnement en cours...");
+                return Ok();
+            }
+
             var itemToRemove = _subscriptions.Single(r => r.Id == id && r.Oid == oid);
             if (itemToRemove !=null)
             {
@@ -137,6 +143,7 @@ namespace WebhookForCustomConnector.Controllers
                 try
                 {
                     await client.PostAsync(sub.CallBackUrl, stringContent);
+                    sub.LastStartTime = DateTime.UtcNow.ToLongTimeString();
                 }
                 catch (Exception ex)
                 {
@@ -162,13 +169,14 @@ namespace WebhookForCustomConnector.Controllers
 
 
             var client = _clientFactory.CreateClient();
-            foreach (var instore in inStoreSubscriptions)
+            foreach (var instoreSub in inStoreSubscriptions)
             {
                 string jsonData = JsonConvert.SerializeObject(inStore);
                 StringContent stringContent = new StringContent(jsonData, System.Text.Encoding.UTF8, "application/json");
                 try
                 {
-                    await client.PostAsync(instore.CallBackUrl, stringContent);
+                    await client.PostAsync(instoreSub.CallBackUrl, stringContent);
+                    instoreSub.LastStartTime= DateTime.UtcNow.ToLongTimeString();
                 }
                 catch (Exception ex)
                 {
@@ -193,7 +201,7 @@ namespace WebhookForCustomConnector.Controllers
         private Subscription AddSubscription(CallBack callback, TypeEvent typeEvent, IHeaderDictionary headers)
         {
 
-            Subscription subscription = null;
+            Subscription Subscription = null;
 
             // Récupère le numéro d'abonnement du workflow afin de le stocker pour le retrouver
             // pour suppression.
@@ -203,7 +211,7 @@ namespace WebhookForCustomConnector.Controllers
                                .First();
 
 
-
+            string CreatedTime = DateTime.UtcNow.ToLongTimeString();
             if (User.Identity.IsAuthenticated)
             {
                 // L'entête doit forcement contenir un jeton d'accès sous la forme
@@ -217,33 +225,36 @@ namespace WebhookForCustomConnector.Controllers
                 Token = Token.Remove(0, 7);
                 var Handler = new JwtSecurityTokenHandler();
                 var AccessToken = Handler.ReadJwtToken(Token);
-                subscription = new Subscription
+                Subscription = new Subscription
                 {
                     Event = typeEvent,
                     CallBackUrl = callback.Url,
                     Id = SubId.Value,
                     Name = GetClaimValue(AccessToken, "name"),
                     Upn = GetClaimValue(AccessToken, "upn"),
-                    Oid = GetClaimValue(AccessToken, "oid")
+                    Oid = GetClaimValue(AccessToken, "oid"),
+                    CreatedTime = CreatedTime
+
                 };
             }
             else
             {
-                subscription = new Subscription
+                Subscription = new Subscription
                 {
                     Event = typeEvent,
                     CallBackUrl = callback.Url,
                     Id = SubId.Value,
                     Name = "anonymous",
                     Upn = "none",
-                    Oid = Guid.NewGuid().ToString()
+                    Oid = Guid.NewGuid().ToString(),
+                    CreatedTime = CreatedTime
                 };
             }
 
             // Le stockage des abonnements se fait en mémoire
             // Bien évidement il faudra utiliser un système plus robuste et autonome
-            _subscriptions.Add(subscription);
-            return subscription;
+            _subscriptions.Add(Subscription);
+            return Subscription;
         }
         #endregion
     }

@@ -5,9 +5,9 @@ Cet article assume que vous connaissiez déjà les basiques de la création d'un
 
 Je ne vais donc pas y revenir, mais si tel n'est pas le cas, je vous laisse le soin d’aller voir la [documentation en ligne](https://docs.microsoft.com/fr-fr/connectors/connectors).
 
-Néanmoins, pour résumé, un connecteur
+Néanmoins, pour résumé, un connecteur, 
 
-_C'est un proxy ou un wrapper autour d’une API qui permet au service sous-jacent de communiquer avec Microsoft Power Automate, Microsoft Power Apps et Azure Logic Apps. Il offre aux utilisateurs un moyen de se connecter à leurs comptes et de tirer parti d’un ensemble d’actions et de déclencheurs prédéfinis pour créer leurs applications et leurs workflows.
+_C'est un proxy ou un wrapper autour d’une API qui permet au service sous-jacent de communiquer avec Microsoft Power Automate, Microsoft Power Apps et Azure Logic Apps. Il offre aux utilisateurs un moyen de se connecter à leurs comptes et de tirer parti d’un ensemble d’actions et de déclencheurs prédéfinis pour créer leurs applications et leurs workflows._
 
 _Chaque connecteur offre un ensemble d’opérations classées comme « Actions » et « Déclencheurs ». Une fois que vous vous êtes connecté au service sous-jacent, ces opérations peuvent être facilement exploitées dans vos applications et vos workflows._
 
@@ -15,21 +15,25 @@ _Chaque connecteur offre un ensemble d’opérations classées comme « Actions 
 | :------------- | :---------- |
 |**Action**| _Par exemple, vous utiliseriez une action pour rechercher, écrire, mettre à jour ou supprimer des données dans une base de données._|
 |**Déclencheurs** _Polling_| _Ces déclencheurs appellent votre service selon une fréquence spécifiée pour vérifier l’existence de nouvelles données. Lorsque de nouvelles données sont disponibles, cela entraîne une nouvelle exécution de votre instance de workflow avec les données en entrée_|
-|**Déclencheurs** _Webhook| _Ces déclencheurs écoutent les données sur un point de terminaison, c'est-à-dire qu'ils attendent qu'un événement se produise. L'occurrence de cet événement provoque une nouvelle exécution de votre instance de workflow._  |
+|**Déclencheurs** _Webhook_| _Ces déclencheurs écoutent les données sur un point de terminaison, c'est-à-dire qu'ils attendent qu'un événement se produise. L'occurrence de cet événement provoque une nouvelle exécution de votre instance de workflow._  |
 
-Mon idée ici est de vous montrer comment préparer les éléments nécessaires afin de pouvoir créer un connecteur à base de **déclencheur de type Webhook**. 
+Danc cet article, nous allons aborder la création d'un connecteur de type **déclencheur de type Webhook** 
 
-Si vous préférez suivre un didacticiel, je vous encourage à suivre celui en ligne [Utiliser un webhook en tant que déclencheur pour Azure Logic Apps et Power Automate](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/create-webhook-trigger)
+>Note Un didacticiel, est dispoonible également dans la documentation [Utiliser un webhook en tant que déclencheur pour Azure Logic Apps et Power Automate](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/create-webhook-trigger)
 
 ## Pourquoi développer un connecteur personnalisé ?
 
 Imaginons le scénario très simple suivant. Je suis directeur d’une grande épicerie en ligne, j'utilise votre plate-forme d'ecommerce, qui permet à mes fournisseurs d'ajouter de nouveaux produits dans mon catalogue.
 
-1. J’aimerai pouvoir être notifié, lorsqu'un fournisseur demande l'ajout d'un produit dans le catalogue, à des fins d'approbation de la demande
+J’aimerai pouvoir être notifié
+
+1. Lorsqu'un fournisseur demande l'ajout d'un produit dans le catalogue, à des fins d'approbation de la demande
 
 2. Lorsqu'un magasin réceptionne de nouvelles marchandises.
 
-Bien évidemment, vous avez prévu le cas, et votre plate-forme le gère correctement et affiche les notifications. Mais en tant que directeur, je suis souvent sur les routes, pas toujours connecté à mon PC. En créant un connecteur personnalisé, vous allez ajouter de la souplesse à votre système, en permettant au directeur (ou à son IT) de créer un Workflow très simple, qui va par exemple, dés réception d’une marchandise notifier l’application Mobile Power Automate, comme illustrer sur l’image suivante.
+J'imagine sans aucun doute que vous avez déjà prévu le cas, et que votre plate-forme le gère correctement. Mais en tant que directeur, je suis souvent sur les routes, pas toujours connecté à mon PC et j'aimerai pouvoir être notifié par un autre moyen, par exemple sur mon mobile.
+
+Si vous n'avez pas l'équivalant d'une application Mobile, vous pouvez vous appuyer sur la [Power Platform](https://powerplatform.microsoft.com/fr-fr/) de Microsoft, en créant un connecteur personnalisé, vous allez ajouter de la souplesse à votre système, en permettant au directeur (ou à son IT) de créer un Workflow très simple, dés réception d’une marchandise notifier l’application Mobile Power Automate, comme illustrer sur l’image suivante.
 
 ![PowerAutomate](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/PowerAutomate.png)
 
@@ -315,7 +319,7 @@ Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous p
 
 14. Sélectionnez "lorsqu'un nouveau produit arrive dans le magasin (version d'évaluation)", à ce stade comme aucune information de sécurité n'a été ajouté, le connexion se fait automatiquement.
 
-15. Ajoutez une nouvelle étape de type "Notifications" | par exemple "Send me a mobile notification" ou tout autre à votre convenance.
+15. Ajoutez une nouvelle étape de type "Notifications" | par exemple "Send me a mobile notification" ou "Send me an email Notification"
 
 16. Vous pouvez alors remplir, la zone de texte rapidement, en choisissant du contenu dynamique. Vous noterez la correspondance entre les champs du contenu dynamique et la définition/inStore du fichier de définition OpenAPI vu plus haut.
 ![DYNAMIQUE](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/contenudynamique.png)
@@ -437,7 +441,7 @@ Appuyez-vous sur [l'écosystème des connecteurs personnalisés](https://docs.mi
 
 ### Bonus
 
-Si vous avez installé l'application sur Azure, il est possible de s'abonner aux logs du Web Hook afin de pister les erreurs et les logs.
+Si vous avez installé l'application sur Azure, il est possible de s'abonner aux flux de logs du WebHook afin de pister les erreurs et les logs.
 
 Pour ce faire vous pouvez utiliser l'utilitaire [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
