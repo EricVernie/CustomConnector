@@ -41,7 +41,7 @@ En créant un connecteur personnalisé, vous allez ainsi ajouter de la souplesse
 
 Lorsqu’un évènement se passe sur votre plate-forme, le déclencheur en informera le connecteur qui pourra alors initier un workflow Logic App ou Power Automate.
 
-Les avantages sont nombreux, du fait même qu’ils existent de nombreux autres connecteurs
+Les avantages sont nombreux du fait même qu’ils existent de nombreux autres connecteurs
 [Logic App](https://docs.microsoft.com/fr-fr/azure/connectors/apis-list#:~:text=Connectors%20provide%20quick%20access%20from%20Azure%20Logic%20Apps,the%20data%20that%20you%20create%20and%20already%20have.)
  et [Power Automate](https://emea.flow.microsoft.com/fr-fr/connectors/)
 
