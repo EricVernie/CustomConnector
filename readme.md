@@ -33,7 +33,9 @@ J’aimerai pouvoir être notifié
 
 J'imagine sans aucun doute que vous avez déjà prévu le cas, et que votre plate-forme le gère correctement. Mais en tant que directeur, je suis souvent sur les routes, pas toujours connecté à mon PC et j'aimerai pouvoir être notifié par un autre moyen, par exemple sur mon mobile.
 
-Si vous n'avez pas l'équivalant d'une application Mobile, vous pouvez vous appuyer sur la [Power Platform](https://powerplatform.microsoft.com/fr-fr/) de Microsoft, en créant un connecteur personnalisé, vous allez ajouter de la souplesse à votre système, en permettant au directeur (ou à son IT) de créer un Workflow très simple, dés réception d’une marchandise notifier l’application Mobile Power Automate, comme illustrer sur l’image suivante.
+Si vous n'avez pas l'équivalent d'une application Mobile, vous pouvez vous appuyer sur la [Power Platform](https://powerplatform.microsoft.com/fr-fr/) de Microsoft.
+
+En créant un connecteur personnalisé, vous allez ainsi ajouter de la souplesse à votre système, en permettant au directeur (ou à son IT) de créer un Workflow très simple, dés réception d’une marchandise notifier l’application Mobile Power Automate, comme illustrer sur l’image suivante.
 
 ![PowerAutomate](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/PowerAutomate.png)
 
