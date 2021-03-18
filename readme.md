@@ -83,7 +83,8 @@ Pour définir un déclencheur de type webhook, il faut rajouter la propriété *
 
 ![DEFINITION](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Definition.png)
 
-_définition au format OpenAPI d'une opération de type déclencheur_
+_Extrait d'une définition au format OpenAPI d'une opération de type déclencheur_
+
 ```json
 "/event/instore": {
       "x-ms-notification-content": {
