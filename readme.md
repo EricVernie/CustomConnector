@@ -49,7 +49,7 @@ Les avantages sont nombreux du fait même qu’ils existent de nombreux autres c
 
 - Pas besoin de développer une solution d’intégration pour chaque système, les connecteurs disponibles sont fait pour ça.
 
-- Vous permettez à vos clients non-développeurs de créer facilement leurs propres workflows d’intégration à l’aide de Power Automate ou Logic App.
+- Vous permettez à vos clients "non-développeur" de créer facilement leurs propres workflows d’intégration à l’aide de Power Automate ou Logic App.
 
 ## Logique d'un déclencheur de type webhook
 
