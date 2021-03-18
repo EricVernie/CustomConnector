@@ -256,7 +256,7 @@ public IActionResult RemoveSubscription(string oid, string id)
 
 ### Déclencher un workflow
 
-Pour déclencher un workflow, c'est tout compte fait assez simple, il suffira juste d'exécuter une requête Post sur l'Url de rappel, en n'oubliant pas delui passer le contenu du corps du message, comme illustré dans le code c# suivant.
+Pour déclencher un workflow, il suffira d'exécuter une requête **Post** sur l'Url de rappel, en n'oubliant pas delui passer le contenu du corps du message, comme illustré dans le code c# suivant.
 
 ```CSharp
  [HttpPost, Route("/fire/instore")]
