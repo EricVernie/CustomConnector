@@ -73,6 +73,7 @@ Dans les lignes qui suivent nous allons donc voir comment :
 
 - Créer le code du Webhook qui va gérer les abonnements
 - Créer le fichier de définition OpenAPI
+- Sécuriser le connecteur
 
 ### Définition d'un déclencheur de type Webhook
 
