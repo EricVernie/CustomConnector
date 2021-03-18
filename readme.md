@@ -45,13 +45,13 @@ Les avantages sont nombreux, du fait même qu’ils existent de nombreux autres 
 [Logic App](https://docs.microsoft.com/fr-fr/azure/connectors/apis-list#:~:text=Connectors%20provide%20quick%20access%20from%20Azure%20Logic%20Apps,the%20data%20that%20you%20create%20and%20already%20have.)
  et [Power Automate](https://emea.flow.microsoft.com/fr-fr/connectors/)
 
-- Ils vous permettront de vous intégrer à moindre frais et facilement à la plate-forme Office 365, Azure, Dynamics 365, et autres SalesForce, Twitter, etc.. [connecteurs](https://emea.flow.microsoft.com/fr-fr/connectors/?filter=&category=all), et ceci que cela soit dans le cloud ou on-premise.
+- Ils vous permettront de vous intégrer à moindre frais et facilement à la plate-forme Office 365, Azure, Dynamics 365, et autres SalesForce, Twitter, etc.. [Liste des connecteurs](https://emea.flow.microsoft.com/fr-fr/connectors/?filter=&category=all), et ceci que le système d'informations de votre soit dans le cloud ou à demeure.
 
 - Pas besoin de développer une solution d’intégration pour chaque système, les connecteurs disponibles sont fait pour ça.
 
-- Vous permettez à vos clients non-développeurs de créer facilement leurs propres workflows d’intégration à l’aide de Power Automate.
+- Vous permettez à vos clients non-développeurs de créer facilement leurs propres workflows d’intégration à l’aide de Power Automate ou Logic App.
 
-## Logique d'un déclencheur webhook dans Logic App et Power Automate
+## Logique d'un déclencheur de type webhook
 
 1. Lors de l'enregistrement d'un Workflow, Logic App/Power Automate s'abonne au déclencheur, en lui passant une url de rappel dans le corps du message  
     |||
