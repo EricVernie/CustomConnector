@@ -34,7 +34,7 @@
         ],
         "responses": {
           "201": {
-            "description": "Success"
+            "description": "Created"
           }
         }
       }
@@ -62,7 +62,7 @@
         ],
         "responses": {
           "201": {
-            "description": "Success"
+            "description": "Created"
           }
         }
       }

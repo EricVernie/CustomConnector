@@ -57,8 +57,7 @@ namespace WebhookForCustomConnector.Controllers
         {
             _logger.LogInformation("Abonnement à l'évènement 'Lorsqu'une nouvelle commande est créée'");            
             Subscription subscription = AddSubscription(callback,TypeEvent.NewOrder, this.Request.Headers);           
-            string location = $"https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}";
-            _logger.LogInformation($"Location: {location}");
+            string location = $"https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}";            
             return new CreatedResult(location, null);
         }
         [Consumes(MediaTypeNames.Application.Json)]
@@ -66,10 +65,9 @@ namespace WebhookForCustomConnector.Controllers
         [HttpPost, Route("/event/instore")]
         public IActionResult NewInstoreProduct([FromBody] CallBack callback)
         {            
-            _logger.LogInformation("Abonnement à l'évènement 'Arrivée de nouveaux produits' ");
+            _logger.LogInformation("Abonnement à l'évènement 'Arrivée d'un nouveau produit' ");
             Subscription subscription = AddSubscription(callback, TypeEvent.InStore, this.Request.Headers);
-            string location = $"https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}/";
-            _logger.LogInformation($"Location: {location}");
+            string location = $"https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}/";            
             return new CreatedResult(location, null);
         }
        
@@ -78,7 +76,7 @@ namespace WebhookForCustomConnector.Controllers
         {
             if (_subscriptions.Count == 0)
             {
-                _logger.LogInformation("Aucun d'abonnement en cours...");
+                _logger.LogInformation("Aucun abonnement en cours...");
                 return Ok();
             }
 
@@ -163,18 +161,22 @@ namespace WebhookForCustomConnector.Controllers
         public async Task<IActionResult> FireInstore([FromBody] InStore inStore)
         {
             _inStores.Add(inStore);
+            //Retrouve tous les abonnements de type InStore
             var inStoreSubscriptions = _subscriptions
                             .Where(s => s.Event == TypeEvent.InStore)
                             .Select(s => s).ToList();
 
 
             var client = _clientFactory.CreateClient();
+            //Parcourir les abonnements
             foreach (var instoreSub in inStoreSubscriptions)
             {
+                //Construire la charge de travail au format Json
                 string jsonData = JsonConvert.SerializeObject(inStore);
                 StringContent stringContent = new StringContent(jsonData, System.Text.Encoding.UTF8, "application/json");
                 try
                 {
+                    // Invoque l'Url de rappel avec la charge de travail
                     await client.PostAsync(instoreSub.CallBackUrl, stringContent);
                     instoreSub.LastStartTime= DateTime.UtcNow.ToLongTimeString();
                 }

@@ -109,7 +109,7 @@ _Extrait d'une définition au format OpenAPI d'une opération de type déclenche
         ],
         "responses": {
           "201": {
-            "description": "Success"
+            "description": "Created"
           }
         }
       }
@@ -171,25 +171,27 @@ Et la représentation C# de l'opération **NewInstoreProduct**
 ```CSharp
 [Consumes(MediaTypeNames.Application.Json)]
 [ProducesResponseType(StatusCodes.Status201Created)]
+[HttpPost, Route("/event/instore")]
 public IActionResult NewInstoreProduct([FromBody] CallBack callback)
-{                
+{            
+    _logger.LogInformation("Abonnement à l'évènement 'Arrivée d'un nouveau produit' ");
     Subscription subscription = AddSubscription(callback, TypeEvent.InStore, this.Request.Headers);
-    string location = $"https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}/";    
+    string location = $"https://{this.Request.Host.Host}/event/remove/{subscription.Oid}/{subscription.Id}/";            
     return new CreatedResult(location, null);
-}       
+}
 ```
 
 >Note: C'est cette méthode qui sera appelée par Logic App/Power Automate avec l'Url de rappel contenu dans la propriété **CallBack.Url**.
 
 ### Suppression d'un abonnement
 
-Lors de l'inscription de l'abonnement du Workflow, la méthode **NewInstoreProduct** est invoquée, c'est à ce moment-là qu'elle doit retournée dans le champ d'entête **Location**, l'Url de suppression d'un abonnement. Cette action se déclenche lorsque le connecteur personnalisé n'est plus utilisé ou que le workflow l'utilisant est supprimé.
+Lors de l'inscription de l'abonnement du Workflow, la méthode **NewInstoreProduct** est invoquée, c'est à ce moment-là qu'elle doit retourner dans le champ d'entête **Location**, l'Url de suppression d'un abonnement. Cette action se déclenche lorsque le connecteur personnalisé n'est plus utilisé ou que le workflow l'utilisant est supprimé.
 
->Note: Le champ d'entête **Location** n'a de sens que si la méthode retourne une réponse d'état 201 dans notre contexte.
+>Note: Le champ d'entête **Location** n'a de sens que si la méthode retourne une réponse d'état 201 (crée).
 
-Afin de retrouver le bon abonnement à supprimer, j'ai décidé de la constituer d'un identificateur **Oid** représentant l'utilisateur authentifié et de l'identificateur **Id** numéro de la souscription renvoyé par Logic App/Power Automate dans l'entête "x-ms-workflow-subscription-id" (Nous y reviendrons un peu plus tard lorsque j'aborderai la sécurité du connecteur)
+Afin de retrouver le bon abonnement à supprimer, l'Url de suppression sera constituée d'un identificateur **oid** représentant l'utilisateur authentifié et de l'identificateur **Id** numéro de la souscription renvoyé par Logic App/Power Automate dans le champ l'entête "x-ms-workflow-subscription-id".
 
-Le format de cette url sera donc "/event/remove/{subscription.Oid}/{subscription.Id}/", mais bien évidement ce n'est pas figé et dépendra sans doute de votre propre logique.
+Le format de cette url sera donc "/event/remove/{oid}/{Id}/". Bien évidement ce n'est pas figé et dépendra sans doute de votre propre logique.
 
 La définition OpenAPI pour la suppression de l'abonnement, doit donc reprendre le format de cette url, comme illustré dans l'extrait suivant.
 
@@ -222,7 +224,7 @@ La définition OpenAPI pour la suppression de l'abonnement, doit donc reprendre 
         }
       }
     }
-
+...
 ```
 
 Les deux paramètres **oid** et **id** sont requis et doivent être placés dans l'url elle même **"in":"path"**.
@@ -231,20 +233,29 @@ Comme c'est une opération de type Action, nous ne souhaitons pas qu'elle soit v
 La représentation C# est la suivante :
 
 ```CSharp
- [HttpDelete, Route("/event/remove/{oid}/{id}")]
- public IActionResult RemoveSubscription(string oid,string id)
- {
+[HttpDelete, Route("/event/remove/{oid}/{id}")]
+public IActionResult RemoveSubscription(string oid, string id)
+{
+    if (_subscriptions.Count == 0)
+    {
+        _logger.LogInformation("Aucun abonnement en cours...");
+        return Ok();
+    }
     var itemToRemove = _subscriptions.Single(r => r.Id == id && r.Oid == oid);
-    _subscriptions.Remove(itemToRemove);           
+    if (itemToRemove !=null)
+    {
+        _logger.LogInformation($"Suppression de l'abonnement : {id}, pour l'utilisateur '{itemToRemove.Name}'");
+        _subscriptions.Remove(itemToRemove);
+    }            
     return Ok();
 }
 ```
 
->Note : C'est une représentation très naïve, car les abonnements sont placés en mémoire dans une simple liste. Il faudra sans doute penser à un système plus robuste et autonome, afin de permettre à votre API d'avoir accès aux URL de rappels. Mais cela suffit ici pour nos besoins de démonstrations.
+>Note : C'est une représentation très naïve, car les abonnements sont placés en mémoire dans une simple liste. Il faudra sans doute penser à un système plus robuste et autonome, mais cela suffit ici pour nos besoins de démonstrations.
 
 ### Déclencher un workflow
 
-Pour déclencher un workflow, c'est tout compte fait assez simple, il suffira juste d'un POST sur l'url de rappel renvoyée par Logic App/Power, en n'oubliant pas de passer le contenu du corps du message, comme illustré dans le code c# suivant.
+Pour déclencher un workflow, c'est tout compte fait assez simple, il suffira juste d'un POST sur l'Url de rappel, en n'oubliant pas de passer le contenu du corps du message, comme illustré dans le code c# suivant.
 
 ```CSharp
  [HttpPost, Route("/fire/instore")]
@@ -252,19 +263,24 @@ Pour déclencher un workflow, c'est tout compte fait assez simple, il suffira ju
  public async Task<IActionResult> FireInstore([FromBody] InStore inStore)
  {
      _inStores.Add(inStore);
+     //Retrouve tous les abonnements de type InStore
      var inStoreSubscriptions = _subscriptions
                      .Where(s => s.Event == TypeEvent.InStore)
                      .Select(s => s).ToList();
 
 
      var client = _clientFactory.CreateClient();
-     foreach (var instore in inStoreSubscriptions)
+     //Parcourir les abonnements
+     foreach (var instoreSub in inStoreSubscriptions)
      {
+         //Construire la charge de travail au format Json
          string jsonData = JsonConvert.SerializeObject(inStore);
          StringContent stringContent = new StringContent(jsonData, System.Text.Encoding.UTF8, "application/json");
          try
          {
-             await client.PostAsync(instore.CallBackUrl, stringContent);
+             // Invoque l'Url de rappel avec la charge de travail
+             await client.PostAsync(instoreSub.CallBackUrl, stringContent);
+             instoreSub.LastStartTime= DateTime.UtcNow.ToLongTimeString();
          }
          catch (Exception ex)
          {
@@ -277,38 +293,39 @@ Pour déclencher un workflow, c'est tout compte fait assez simple, il suffira ju
 
 ### Création du connecteur personnalisé avec Power Automate
 
-En l'état, il est possible de commencer à tester la création du connecteur personnalisé,
+En l'état, il est possible de commencer à tester la création du connecteur personnalisé.
+
 Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous pouvez obtenir un essai gratuit en suivant la procédure [ici](https://docs.microsoft.com/fr-fr/power-automate/sign-up-sign-in)
 
-1. Récupérez le fichier [définition](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/OpenApiDefinition/OpenApiDefinition.json)
+1. Récupérez le fichier [définition](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/OpenApiDefinition/OpenApiDefinition.json).
 
-2. Connectez-vous au portail https://make.powerapps.com/
+2. Connectez-vous au portail https://make.powerapps.com/.
 
-3. Dans le panneau gauche, sélectionnez "Données" | "Connecteurs Personnalisés"
+3. Dans le panneau gauche, sélectionnez "Données" | "Connecteurs Personnalisés".
 
 4. En haut à droite sélectionnez "+ Nouveau connecteur personnalisé" | "Importer un fichier OpenAPI"
 
-5. Dans la boîte de dialogue qui apparait, donnez un nom au connecteur puis | Importez le fichier que vous avez récupérez à l'étape 1
+5. Dans la boîte de dialogue qui apparait, donnez un nom au connecteur puis, importez le fichier que vous avez récupéré à l'étape 1.
 
-6. Vous noterez dans l'onglet "1.Général" que le champ Hôte n'est pas renseigné. Pour cela il vous faut publier le code de cet article. Néanmoins, vous pouvez continuer les étapes suivantes, sans vous en préoccuper outre mesure en indiquant dans le champ hôte toto.contoso.com , par contre à l'enregistrement du flux, rien ne se passera bien évidement. sinon suivez les sous-étapes suivantes : 
+6. Vous noterez dans l'onglet "1.Général" que le champ Hôte n'est pas renseigné. Pour cela il vous faut publier le code de cet article. Néanmoins, vous pouvez continuer les étapes suivantes, sans vous en préoccuper outre mesure en indiquant dans le champ hôte toto.contoso.com, par contre à l'enregistrement du flux, rien ne se passera bien évidement. Sinon suivez les sous-étapes suivantes :
 
-    1. [Abonnement Azure Gratuit](https://azure.microsoft.com/fr-fr/free/)
+    1. [Abonnement Azure Gratuit](https://azure.microsoft.com/fr-fr/free/).
 
-    2. [Téléchargement gratuit de visual Studio](https://visualstudio.microsoft.com/fr/vs/)
+    2. [Téléchargement gratuit de visual Studio](https://visualstudio.microsoft.com/fr/vs/).
 
-    3. Cloner le code
+    3. Cloner le code.
 
-    4. [Publiez l'application sur Azure avec Visual Studio 2019](https://docs.microsoft.com/fr-fr/visualstudio/deployment/quickstart-deploy-to-azure?view=vs-2019)
+    4. [Publiez l'application sur Azure avec Visual Studio 2019](https://docs.microsoft.com/fr-fr/visualstudio/deployment/quickstart-deploy-to-azure?view=vs-2019).
 
     5. Ajoutez le champ Hôte du style [NOM DE L'APPLICATION].azurewebsites.com.
 
-7. Allez ensuite dans l'onglet 3. Définition afin de vérifier qu'aucune erreur n'est survenue. Vous noterez à ce stade qu'aucun Déclencheur n'est disponible. Ceci peut être déroutant, mais ils sont bien présent. Vous pourrez le vérifier en éditant le swagger dans l'interface.
+7. Allez ensuite dans l'onglet "3. Définition" afin de vérifier qu'aucune erreur n'est survenue. Vous noterez qu'aucun Déclencheur n'est disponible. Ceci peut être déroutant, mais ils sont bien présent. Vous pourrez le vérifier en éditant le swagger dans l'interface.
 
 8. Sélectionnez "Créer le connecteur". Si tout se passe bien, le connecteur est créé.
 
-9. Nous allons maintenant créer un Flux en sélectionnant dans le panneau Gauche "Flux"
+9. Nous allons maintenant créer un Flux en sélectionnant dans le panneau Gauche "Flux".
 
-10. Puis en haut de l'écran "+ Nouveau Flux" | "Flux de cloud automatisé"
+10. Puis en haut de l'écran "+ Nouveau Flux" | "Flux de cloud automatisé".
 
 11. Donnez un nom au flux, puis activez le bouton "Ignorer", afin de créer un flux vierge.
 
@@ -319,32 +336,40 @@ Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous p
 
 14. Sélectionnez "lorsqu'un nouveau produit arrive dans le magasin (version d'évaluation)", à ce stade comme aucune information de sécurité n'a été ajouté, le connexion se fait automatiquement.
 
-15. Ajoutez une nouvelle étape de type "Notifications" | par exemple "Send me a mobile notification" ou "Send me an email Notification"
+15. Ajoutez une nouvelle étape de type "Notifications" | par exemple "Send me a mobile notification" ou "Send me an email Notification" si vous n'avez pas l'application [Power Automate Mobile](https://flow.microsoft.com/en-us/mobile/download/)
 
 16. Vous pouvez alors remplir, la zone de texte rapidement, en choisissant du contenu dynamique. Vous noterez la correspondance entre les champs du contenu dynamique et la définition/inStore du fichier de définition OpenAPI vu plus haut.
 ![DYNAMIQUE](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/contenudynamique.png)
 
 ### Sécurité du connecteur
 
-Il est important que l'utilisateur puisse s'identifier avant de pouvoir utiliser le connecteur dans notre contexte, nous utiliserons Azure Active Directory, mais bien évidement c'est ouvert à d'autres fournisseurs d'identité.
+En tant que développeur d'une API, je n'imagine pas une seule seconde, que votre API ne soit pas protégée d'une manière ou d'une autre. Soit par une clé d'API, ou soit via l'intermédiaire d'un fournisseur d'identité.
 
-#### Inscrire une application dans Azure Active Directory
+Dans notre exemple, notre API Webhook est protégée via le fournisseur d'identité Azure Active Directory, car c'est la manière la plus naturelle avec un connecteur Power Automate d'identifier un utilisateur.
+
+En d'autres termes, la méthode d'abonnement ne peut être appelée que si un utilisateur s'authentifie.
+
+
+#### Protéger le WebHook avec Azure Active Directory
+
+Tout d'abord il faut inscrire l'application dans Azure Active Directory
+
 
 Voici les différentes étapes à suivre :
 
-1. A l'aide du portail https://aad.portal.azure.com/, sélectionnez "Azure Active Directory" | Inscription d'applications
+1. A l'aide du portail https://aad.portal.azure.com/, sélectionnez "Azure Active Directory" | Inscription d'applications.
 
-2. "+ Nouvelle inscription" | Donnez un Nom | Cochez "Comptes dans un annuaire d'organisation (tout annuaire Azure AD - Multilocataire)
+2. "+ Nouvelle inscription" | Donnez un Nom | Cochez "Comptes dans un annuaire d'organisation (tout annuaire Azure AD - Multilocataire).
 
-3. Bouton S'inscrire
+3. Cliquez sur le bouton S'inscrire.
 
-4. Une fois l'application inscrite, sélectionnez "Vue d'ensemble" et copiez le GUID "ID d'application (client)"
+4. Une fois l'application inscrite, sélectionnez "Vue d'ensemble" et copiez le GUID "ID d'application (client)".
 
-5. Ensuite sélectionnez "Certificats & Secrets" | "+ Nouveau secret client" (copiez le secret pour une utilisation future)
+5. Ensuite sélectionnez "Certificats & Secrets" | "+ Nouveau secret client" (copiez le secret pour une utilisation future).
 
-6. Puis sélectionnez "API autorisées" | "+ Ajouter une autorisation" | "Microsoft Graph" | "Autorisations déléguées" | cochez "openid et profile"
+6. Puis sélectionnez "API autorisées" | "+ Ajouter une autorisation" | "Microsoft Graph" | "Autorisations déléguées" | cochez "openid et profile".
 
-7. Sélectionnez "Exposer une API" | "+ Ajouter une étendue" | Nom de l’étendue : impersonate | Qui peut accepter :" Administrateurs et Utilisateurs" | puis remplissez les autres champs obligatoires
+7. Sélectionnez "Exposer une API" | "+ Ajouter une étendue" | Nom de l’étendue : impersonate | Qui peut accepter :" Administrateurs et Utilisateurs" | puis remplissez les autres champs obligatoires.
 
 8. Copiez l'étendue qui doit être de la forme api://[ID de l'application]/impersonate
 
@@ -356,8 +381,8 @@ Voici les différentes étapes à suivre :
 
     - l'étendue de l'application
 
-9. Il nous reste encore un élément essentiel que nous n'avons pas encore renseigné, mais qui ne peut être que fourni que par l'éditeur de connecteur personnalisé Logic App/Power Automate, lorsqu'on renseigne les différents champs dans l'onglet sécurité c'est **l'url de redirection**.
-Retournez sur le portail power automate et renseignez les champs dans l'onglet 2.Securité comme illustré sur la figure suivante :
+9. Il nous reste encore un élément essentiel que nous n'avons pas encore renseigné, mais qui ne peut être que fourni que par l'éditeur de connecteur personnalisé, lorsqu'on renseigne les différents champs dans l'onglet sécurité c'est **l'Url de redirection**.
+Retournez sur le portail Power Automate et renseignez les champs dans l'onglet "2.Securité" comme illustré sur la figure suivante :
 
     ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Securite2.png)
 
@@ -394,7 +419,7 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
   },
 ```
 
-2. [Publiez l'application sur Azure avec Visual Studio 2019](https://docs.microsoft.com/fr-fr/visualstudio/deployment/quickstart-deploy-to-azure?view=vs-2019)
+2. [Publiez l'application sur Azure avec Visual Studio 2019](https://docs.microsoft.com/fr-fr/visualstudio/deployment/quickstart-deploy-to-azure?view=vs-2019).
 
 3. Une fois l'application publiée, vous devez avoir un FQDN du style **[NOM DE L'APPLICATION].azurewebsites.net** qu'il faudra renseigner dans la propriété **host** du fichier de définition ou dans le champ Hôte de l'onglet 1.Général, lors de la création du connecteur
 
@@ -410,13 +435,13 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
   "schemes": [ "https" ],
 ```
 
-4. Créez un nouveau flux sur le portail power automate en prenant soin de supprimer toutes références aux connexions du connecteur personnalisé. Si tout fonctionne correctement vous devriez voir apparaître le bouton "Se connecter" comme illustrer sur la figure suivante.
+4. Créez un nouveau flux sur le portail Power Automate en prenant soin de supprimer toutes références aux connexions du connecteur personnalisé. Si tout fonctionne correctement vous devriez voir apparaître le bouton "Se connecter" comme illustrer sur la figure suivante.
 
     ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/SecuriteFlux.png)
 
-5. Une fois le flux crée, sélectionnez en haut à droit "Test" | "Manuellement" | "Enregistrer et tester"
+5. Une fois le flux crée, sélectionnez en haut à droit "Test" | "Manuellement" | "Enregistrer et tester".
 
-6. Ensuite allez dans un navigateur, puis entrez l'url https://[NOM DE L'APPLICATION].azurewebsites.net/swagger
+6. Ensuite allez dans un navigateur, puis entrez l'url https://[NOM DE L'APPLICATION].azurewebsites.net/swagger.
 
 7. Sélectionnez la méthode POST /fire/instore comme illustré sur la figure suivante : 
 
@@ -426,7 +451,7 @@ Retournez sur le portail power automate et renseignez les champs dans l'onglet 2
 
     ![EXECUTIONFLUX](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/ExecutionFlux.png)
 
-9. Si vous avez l'application Power Automate sur votre [mobile](https://flow.microsoft.com/en-us/mobile/download/), vous devriez recevoir la notification
+9. et si vous avez l'application Power Automate sur votre [mobile](https://flow.microsoft.com/en-us/mobile/download/), vous devriez recevoir la notification.
 
     ![POWERAUTOMATE](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/PowerAutomate2.jpg)
 
@@ -445,8 +470,7 @@ Si vous avez installé l'application sur Azure, il est possible de s'abonner aux
 
 Pour ce faire vous pouvez utiliser l'utilitaire [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
-Ensuite la commande **_az webapp log tail --name [NOM APPLICATION] -g [NOM DU RESSOURCE GROUPE]_** va vous permettre de vous connecter au flux de logs à partir de votre poste de travail.
+Ensuite la commande **_az webapp log tail --name [NOM APPLICATION] -g [NOM DU RESSOURCE GROUPE]_** va vous permettre de vous connecter au flux de logs à partir de votre poste de travail, comme illustré sur la figure suivante.
 
 ![LOGS](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/logs.png)
-
 
