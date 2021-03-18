@@ -19,7 +19,7 @@ _Chaque connecteur offre un ensemble d’opérations classées comme « Actions 
 
 Danc cet article, nous allons aborder la création d'un connecteur de type **déclencheur de type Webhook** 
 
->Note Un didacticiel, est dispoonible également dans la documentation [Utiliser un webhook en tant que déclencheur pour Azure Logic Apps et Power Automate](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/create-webhook-trigger)
+>Note Un didacticiel, est disponible également dans la documentation [Utiliser un webhook en tant que déclencheur pour Azure Logic Apps et Power Automate](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/create-webhook-trigger)
 
 ## Pourquoi développer un connecteur personnalisé ?
 
