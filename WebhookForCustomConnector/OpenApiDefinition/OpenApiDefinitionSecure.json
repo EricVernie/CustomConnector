@@ -4,7 +4,7 @@
     "title": "Exemple de connecteur personnalisé",
     "version": "v1"
   },
-  "host": "webhookforcustomconnector.azurewebsites.net",
+  "host": "[NOM APPLICATION].azurewebsites.net",
   "basePath": "/",
   "schemes": [ "https" ],
   "consumes": [ "application/json" ],

@@ -4,11 +4,11 @@
     "title": "Exemple de connecteur personnalisé",
     "version": "v1"
   },
-  "host": "webhookforcustomconnector.azurewebsites.net",
+  "host": "[NOM APPLICATION].azurewebsites.net",
   "basePath": "/",
   "schemes": [ "https" ],
   "consumes": [ "application/json" ],
-  "produces": [ "application/json" ], 
+  "produces": [ "application/json" ],
   "paths": {
     "/event/neworder": {
       "x-ms-notification-content": {
