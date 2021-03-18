@@ -363,7 +363,7 @@ Voici les différentes étapes à suivre :
 
 2. "+ Nouvelle inscription" | Donnez un Nom | Cochez "Comptes dans un annuaire d'organisation (tout annuaire Azure AD - Multilocataire).
 
-3. Cliquez sur le bouton S'inscrire.
+3. Cliquez sur le bouton "S'inscrire".
 
 4. Une fois l'application inscrite, sélectionnez "Vue d'ensemble" et copiez le GUID "ID d'application (client)".
 
@@ -371,7 +371,7 @@ Voici les différentes étapes à suivre :
 
 6. Puis sélectionnez "API autorisées" | "+ Ajouter une autorisation" | "Microsoft Graph" | "Autorisations déléguées" | cochez "openid et profile".
 
-7. Sélectionnez "Exposer une API" | "+ Ajouter une étendue" | Nom de l’étendue : impersonate | Qui peut accepter :" Administrateurs et Utilisateurs" | puis remplissez les autres champs obligatoires.
+7. Sélectionnez "Exposer une API" | "+ Ajouter une étendue" | Nom de l’étendue : "impersonate" | Qui peut accepter :" Administrateurs et Utilisateurs" | puis remplissez les autres champs obligatoires.
 
 8. Copiez l'étendue qui doit être de la forme api://[ID de l'application]/impersonate
 
@@ -400,6 +400,8 @@ Retournez sur le portail Power Automate et renseignez les champs dans l'onglet "
     Une fois le connecteur enregistré, copiez **l'URL de redirection**, car nous allons finir l'enregistrement de notre application Azure Active Directory.
 
     >Note : Logic App retourne une URL du style : https://logic-apis-francecentral.consent.azure-apim.net/redirect, Power Automate retourne une URL du style : https://global.consent.azure-apim.net/redirect
+
+    >Note:*Il est important dans ce champ Resource Url de bien y mettre l'application ID.
 
 10. Retournez sur le portail Azure Active Directory https://aad.portal.azure.com, sélectionnez l'application que vous venez d'inscrire
 
