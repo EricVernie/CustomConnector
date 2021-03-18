@@ -459,7 +459,7 @@ Retournez sur le portail Power Automate et renseignez les champs dans l'onglet "
 
     ![POWERAUTOMATE](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/PowerAutomate2.jpg)
 
-10. Ou alors dans votre messagerie la notification.
+10. Ou alors si vous avez choisi plus haut l'action "Send me an email Notification".
 
     ![NOTIFEMAIL](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/NotificationEmail.png)
 
