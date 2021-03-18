@@ -154,7 +154,7 @@ _Extrait d'une définition au format OpenAPI d'une opération de type déclenche
  |Propriété | Définition|
  | :------------- | :---------- |
  |**"required":["Url"]** | Indique que le champ Url est requis. |
- |**"x-ms-notification-url":"true"**| Indique à Logic App/Power Automate de placer l'URL de rappel dans le champ **Url**.|
+ |**"x-ms-notification-url":"true"**| Indique à Logic App/Power Automate de placer l'Url de rappel dans le champ **Url**.|
  |**"x-ms-visibility":"internal"**|Indique que le champ doit être masqué aux utilisateurs.|
 
 Voici sa représentation en C#, ce n'est ni plus ni moins qu'une classe avec une propriété de type string
@@ -166,9 +166,11 @@ public class CallBack
 }
 ```
 
-Et voici la représentation C# de l'opération **NewInstoreProduct**
+Et la représentation C# de l'opération **NewInstoreProduct**
 
 ```CSharp
+[Consumes(MediaTypeNames.Application.Json)]
+[ProducesResponseType(StatusCodes.Status201Created)]
 public IActionResult NewInstoreProduct([FromBody] CallBack callback)
 {                
     Subscription subscription = AddSubscription(callback, TypeEvent.InStore, this.Request.Headers);
@@ -177,11 +179,13 @@ public IActionResult NewInstoreProduct([FromBody] CallBack callback)
 }       
 ```
 
->Note: Cette méthode sera appelée par Logic App/Power Automate avec l'url de rappel contenu dans la propriété **CallBack.Url**.
+>Note: C'est cette méthode qui sera appelée par Logic App/Power Automate avec l'Url de rappel contenu dans la propriété **CallBack.Url**.
 
 ### Suppression d'un abonnement
 
-Lors de l'inscription de l'abonnement du Workflow Logic App/Power Automate la méthode **NewInstoreProduct** est invoquée, c'est à ce moment-là qu'il faut que cette méthode retourne dans l'entête **Location** l'url qu'appellera Logic App/Power Automate, afin que l'abonnement soit supprimé. Cette action se déclenche lorsque le connecteur personnalisé n'est plus utilisé ou que le workflow l'utilisant est supprimé.
+Lors de l'inscription de l'abonnement du Workflow, la méthode **NewInstoreProduct** est invoquée, c'est à ce moment-là qu'elle doit retournée dans le champ d'entête **Location**, l'Url de suppression d'un abonnement. Cette action se déclenche lorsque le connecteur personnalisé n'est plus utilisé ou que le workflow l'utilisant est supprimé.
+
+>Note: Le champ d'entête **Location** n'a de sens que si la méthode retourne une réponse d'état 201 dans notre contexte.
 
 Afin de retrouver le bon abonnement à supprimer, j'ai décidé de la constituer d'un identificateur **Oid** représentant l'utilisateur authentifié et de l'identificateur **Id** numéro de la souscription renvoyé par Logic App/Power Automate dans l'entête "x-ms-workflow-subscription-id" (Nous y reviendrons un peu plus tard lorsque j'aborderai la sécurité du connecteur)
 
