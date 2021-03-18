@@ -331,12 +331,12 @@ Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous p
 
 11. Donnez un nom au flux, puis activez le bouton "Ignorer", afin de créer un flux vierge.
 
-12. Sélectionnez l'onglet "Personnalisé" | puis sélectionnez le connecteur personnalisé que vous venez de créer
+12. Sélectionnez l'onglet "Personnalisé" | puis sélectionnez le connecteur personnalisé que vous venez de créer.
 
 13. Deux déclencheurs devrait apparaitre comme illustré sur la figure suivante :
 ![DECLENCHEUR](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/declencheurs.png)
 
-14. Sélectionnez "lorsqu'un nouveau produit arrive dans le magasin (version d'évaluation)", à ce stade comme aucune information de sécurité n'a été ajouté, le connexion se fait automatiquement.
+14. Sélectionnez "lorsqu'un nouveau produit arrive dans le magasin (version d'évaluation)". A ce stade comme aucune information de sécurité n'a été ajoutée, la connexion se fait automatiquement.
 
 15. Ajoutez une nouvelle étape de type "Notifications" | par exemple "Send me a mobile notification" ou "Send me an email Notification" si vous n'avez pas l'application [Power Automate Mobile](https://flow.microsoft.com/en-us/mobile/download/)
 
