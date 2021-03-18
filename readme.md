@@ -319,7 +319,7 @@ Nous allons le tester sur Power Automate, si vous n'avez pas d'abonnement vous p
 
     4. [Publiez l'application sur Azure avec Visual Studio 2019](https://docs.microsoft.com/fr-fr/visualstudio/deployment/quickstart-deploy-to-azure?view=vs-2019).
 
-    5. Ajoutez le champ Hôte du style [NOM DE L'APPLICATION].azurewebsites.com.
+    5. Ajoutez le champ Hôte du style [NOM DE L'APPLICATION].azurewebsites.com. Ou [NOM DE L'APPLICATION] est le nom de l'application que vous avez donné lors de la publication à l'étape 4.
 
 7. Allez ensuite dans l'onglet "3. Définition" afin de vérifier qu'aucune erreur n'est survenue. Vous noterez qu'aucun Déclencheur n'est disponible. Ceci peut être déroutant, mais ils sont bien présent. Vous pourrez le vérifier en éditant le swagger dans l'interface.
 
