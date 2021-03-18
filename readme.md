@@ -468,13 +468,13 @@ Retournez sur le portail Power Automate et renseignez les champs dans l'onglet "
 
 Les connecteurs personnalisés à base de déclencheurs, vont vous permettre de déverrouiller des scénarios, sans que vous soyez obligé d'investir lourdement dans le développement de solutions personnalisées.
 
-Il y a quand même un peu de boulot et de code à écrire afin de créer le WebHook pour la gestion des abonnements, ainsi que d'intégrer vos évènements pour qu'il puissent déclencher les workflows. Mais franchement rien en comparaison si vous aviez à développer une solution personnalisée pour tous types de fournisseurs.
+Il y a quand même un peu de travail. Il faut écrire le WebHook pour la gestion des abonnements, et ajouter à vos évènements le déclenchement des workflows. Mais rien en comparaison si vous aviez à développer des solutions personnalisées pour tous types de fournisseurs.
 
-Appuyez-vous sur [l'écosystème des connecteurs personnalisés](https://docs.microsoft.com/en-us/connectors/connector-reference/) de Logic App/Power Automate, pour fournir à vos clients des solutions clés en main adaptées à leurs besoins.
+Appuyez-vous sur [l'écosystème des connecteurs personnalisés](https://docs.microsoft.com/en-us/connectors/connector-reference/), afin de fournir à vos clients des solutions clés en main adaptées à leurs besoins, voir leur laisser le soin de créer leurs propres workflows à leur guise.
 
 ### Bonus
 
-Si vous avez installé l'application sur Azure, il est possible de s'abonner aux flux de logs du WebHook afin de pister les erreurs et les logs.
+Ce n'est pas super évident de déboguer un Webhook dans ce contexte (C'est pour cela que dans le code j'ai ajouté des logs), alors si vous avez installé l'application sur Azure, il est possible de s'abonner aux flux de logs du WebHook afin de pister les erreurs.
 
 Pour ce faire vous pouvez utiliser l'utilitaire [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
