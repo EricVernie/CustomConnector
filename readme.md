@@ -65,7 +65,7 @@ Les avantages sont nombreux, du fait même qu’ils existent de nombreux autres 
 
 ## Définition OpenAPI
 
-L'intégration d'un connecteur personnalisé avec Logic App et Power Automate se fait par l'intermédiaire d'un fichier au format json, qui suit la spécification OpenAPI **version 2.0**, plus connue sous le nom de spécification [Swagger](https://swagger.io) , standard qui permet de définir les interfaces RestFull.
+L'intégration d'un connecteur personnalisé se fait par l'intermédiaire d'un fichier au format Json, qui suit la spécification OpenAPI **version 2.0**, plus connue sous le nom de spécification [Swagger](https://swagger.io) , standard qui permet de définir les interfaces RestFull.
 
 >**Note:** Logic App et Power Automate, ne supporte pas encore la version 3.0
 
@@ -78,7 +78,7 @@ Dans les lignes qui suivent nous allons donc voir comment :
 
 [Microsoft a étendu la définition OpenAPI](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/openapi-extensions) pour ses propres besoins, afin de pouvoir l'intégrer à Logic App et à Power Automate.
 
-Pour définir un déclencheur de type webhook, il faut rajouter la propriété **"x-ms-trigger": "single"** dans la définition, afin d'indiquer à Logic App et Power Automate d'afficher l'opération en tant que déclencheur dans l'éditeur de connecteur personnalisé, comme illustré sur la figure suivante :
+Pour définir un déclencheur de type webhook, il faut rajouter la propriété **"x-ms-trigger": "single"** dans la définition, afin d'afficher l'opération en tant que déclencheur dans l'éditeur de connecteur personnalisé, comme illustré sur la figure suivante :
 >Note : Ne pas mettre la propriété **"x-ms-trigger"** défini l'opération comme étant une **Action**.
 
 ![DEFINITION](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/Definition.png)
@@ -112,7 +112,7 @@ Pour définir un déclencheur de type webhook, il faut rajouter la propriété *
         }
       }
     },
-....
+...
  "definitions": {
     "Callback": {
       "type": "object",
@@ -130,21 +130,13 @@ Pour définir un déclencheur de type webhook, il faut rajouter la propriété *
     },
     "InStore": {
       "type": "object",
-      "properties": {
-        "storeName": {
-          "type": "string"
-        },
-        "productName": {
-          "type": "string"
-        },
-        "quantity": {
-          "format": "int32",
-          "type": "integer"
-        }
+      "properties": { 
+         "storeName": { "type": "string" },
+          "productName": {"type": "string"},
+          "quantity": {"format": "int32","type": "integer"}
       }
     },
-    ...
-
+...
 ```
 
  |Propriété | Définition|
