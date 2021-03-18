@@ -65,7 +65,7 @@ Les avantages sont nombreux du fait même qu’ils existent de nombreux autres c
 
 ## Définition OpenAPI
 
-L'intégration d'un connecteur personnalisé se fait par l'intermédiaire d'un fichier au format Json, qui suit la spécification OpenAPI **version 2.0**, plus connue sous le nom de spécification [Swagger](https://swagger.io) , standard qui permet de définir les interfaces RestFull.
+L'intégration d'un connecteur personnalisé se fait par l'intermédiaire d'un fichier au format Json, qui suit la spécification OpenAPI **version 2.0**, plus connue sous le nom de spécification [Swagger](https://swagger.io) , standard qui permet de définir les interfaces RestFul.
 
 >**Note:** Logic App et Power Automate, ne supporte pas encore la version 3.0
 
