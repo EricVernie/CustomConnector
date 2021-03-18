@@ -434,7 +434,7 @@ Retournez sur le portail Power Automate et renseignez les champs dans l'onglet "
     "title": "Exemple de connecteur personnalisé",
     "version": "v1"
   },
-  "host": "webhookforcustomconnector.azurewebsites.net",
+  "host": "[NOM DE L'APPLICATION].azurewebsites.net",
   "basePath": "/",
   "schemes": [ "https" ],
 ```
@@ -443,7 +443,7 @@ Retournez sur le portail Power Automate et renseignez les champs dans l'onglet "
 
     ![SECURITY](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/SecuriteFlux.png)
 
-5. Une fois le flux crée, sélectionnez en haut à droit "Test" | "Manuellement" | "Enregistrer et tester".
+5. Une fois le flux crée, sélectionnez en haut à droite "Test" | "Manuellement" | "Enregistrer et tester".
 
 6. Ensuite allez dans un navigateur, puis entrez l'url https://[NOM DE L'APPLICATION].azurewebsites.net/swagger.
 
@@ -458,6 +458,10 @@ Retournez sur le portail Power Automate et renseignez les champs dans l'onglet "
 9. et si vous avez l'application Power Automate sur votre [mobile](https://flow.microsoft.com/en-us/mobile/download/), vous devriez recevoir la notification.
 
     ![POWERAUTOMATE](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/PowerAutomate2.jpg)
+
+10. Ou alors dans votre messagerie la notification.
+
+    ![NOTIFEMAIL](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/NotificationEmail.jpg)
 
 
 ### Conclusion
