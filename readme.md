@@ -146,7 +146,7 @@ _Extrait d'une définition au format OpenAPI d'une opération de type déclenche
  | :------------- | :---------- |
  |**x-ms-notification-content**| Schéma de la charge utile qui sera envoyée à Logic App/Power Automate, lors du déclenchement de l'événement. En d'autres termes lorsqu'un nouveau produit arrive en magasin, c'est le schéma contenant les informations sur le produit qui sera envoyé à l'Url de notification, afin de déclencher le Workflow. Par exemple si votre système reçois {storeName": "Magasin 1,"productName": "RTX 3090","quantity": 500}, vous le sauvegarderez, dans votre système, et vous le fournirez également dans le corps du message, lors de l'appel à l'Url de rappel du workflow|
  |description & summary| Chaines de caractères affichées dans l'interface de l'éditeur de Workflow [Conseils sur les chaînes de connecteur](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/connector-string-guidance)|
- |operationId| Idendtification de l'opération|
+ |operationId| Identification de l'opération|
  |**x-ms-trigger**| Définie une opération déclencheur de type Webhook|
  |**parameters**| Propriété importante, car elle définie en entrée **"in":"body"**, c'est à dire dans le corps du message, le paramètre nommé arbitrairement **Callback** qui inclura **l'Url de rappel** fournie par Logic App/Power Automate|
 
