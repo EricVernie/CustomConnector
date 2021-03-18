@@ -5,7 +5,7 @@ Cet article assume que vous connaissiez déjà les basiques de la création d'un
 
 Je ne vais donc pas y revenir, mais si tel n'est pas le cas, je vous laisse le soin d’aller voir la [documentation en ligne](https://docs.microsoft.com/fr-fr/connectors/connectors).
 
-Néanmoins, pour résumé, un connecteur, 
+Néanmoins, pour résumé, un connecteur
 
 _C'est un proxy ou un wrapper autour d’une API qui permet au service sous-jacent de communiquer avec Microsoft Power Automate, Microsoft Power Apps et Azure Logic Apps. Il offre aux utilisateurs un moyen de se connecter à leurs comptes et de tirer parti d’un ensemble d’actions et de déclencheurs prédéfinis pour créer leurs applications et leurs workflows._
 
