@@ -35,7 +35,7 @@ J'imagine sans aucun doute que vous avez déjà prévu le cas, et que votre plat
 
 Si vous n'avez pas l'équivalent d'une application Mobile, vous pouvez vous appuyer sur la [Power Platform](https://powerplatform.microsoft.com/fr-fr/) de Microsoft.
 
-En créant un connecteur personnalisé, vous allez ainsi ajouter de la souplesse à votre système, en permettant au directeur (ou à son IT) de créer un Workflow très simple, dés réception d’une marchandise notifier l’application Mobile Power Automate, comme illustrer sur l’image suivante.
+En créant un connecteur personnalisé, vous allez ainsi ajouter de la souplesse à votre système, en permettant au directeur (ou à son IT) de créer un Workflow très simple, dés réception d’une marchandise, de notifier l’application Mobile Power Automate, comme illustré sur l’image suivante.
 
 ![PowerAutomate](https://github.com/EricVernie/CustomConnector/blob/main/WebhookForCustomConnector/Doc/PowerAutomate.png)
 
