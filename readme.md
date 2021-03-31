@@ -57,9 +57,9 @@ Les avantages sont nombreux du fait même qu’ils existent de nombreux autres c
     |||
     | :------------- | :---------- |
     |Url|https://prod-00.francecentral.logic.azure.com/workflows/0182d35837c1417d859da07f8752bc9d/triggers/Lorsque_qu'un_nouveau_produit_arrive_dans_le_magasin....|
-2. Le déclencheur sauvegarde dans son système cette Url pour une utilisation future
+2. Le déclencheur sauvegarde dans son système cette Url pour une utilisation future.
 
-3. Le déclencheur **doit impérativement retourner** à Logic App/Power Automate, **une Url de suppression de l'abonnement**
+3. Le déclencheur **doit impérativement retourner** à Logic App/Power Automate, **une Url de suppression de l'abonnement**.
 
 4. Lorsqu'un évènement est déclenché, par exemple l'arrivée d'un produit en magasin, votre système initie le workflow à l'aide de l'Url de rappel.
 
