@@ -17,7 +17,7 @@ _Chaque connecteur offre un ensemble d’opérations classées comme « Actions 
 |**Déclencheurs** _Polling_| _Ces déclencheurs appellent votre service selon une fréquence spécifiée pour vérifier l’existence de nouvelles données. Lorsque de nouvelles données sont disponibles, cela entraîne une nouvelle exécution de votre instance de workflow avec les données en entrée_|
 |**Déclencheurs** _Webhook_| _Ces déclencheurs écoutent les données sur un point de terminaison, c'est-à-dire qu'ils attendent qu'un événement se produise. L'occurrence de cet événement provoque une nouvelle exécution de votre instance de workflow._  |
 
-Danc cet article, nous allons aborder la création d'un connecteur de type **déclencheur de type Webhook** 
+Dans cet article, nous allons aborder la création d'un connecteur de type **déclencheur de type Webhook** 
 
 >Note Un didacticiel, est disponible également dans la documentation [Utiliser un webhook en tant que déclencheur pour Azure Logic Apps et Power Automate](https://docs.microsoft.com/fr-fr/connectors/custom-connectors/create-webhook-trigger)
 
