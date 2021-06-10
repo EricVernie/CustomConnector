@@ -21,7 +21,7 @@ using WebhookForCustomConnector.DataModel;
 
 namespace WebhookForCustomConnector.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class StoreEventTrigger : ControllerBase
@@ -71,7 +71,7 @@ namespace WebhookForCustomConnector.Controllers
             return new CreatedResult(location, null);
         }
        
-        [HttpDelete, Route("/event/remove/{oid}/{id}")]
+        [HttpDelete, Route("/event/remove/{oid}/{id}")]        
         public IActionResult RemoveSubscription(string oid, string id)
         {
             if (_subscriptions.Count == 0)

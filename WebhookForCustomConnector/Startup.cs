@@ -62,7 +62,7 @@ namespace WebhookForCustomConnector
 
             app.UseSwagger(actions =>
             {
-                actions.SerializeAsV2 = true;
+               // actions.SerializeAsV2 = true;
             });
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebhookForCustomConnector v1"));
 
